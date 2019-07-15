@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+    form( id="userAccountCreation" method="POST" action="/accountCreation")
+        input(
+        type="text"
+        name="email"
+        placeholder="E-mail"
+        )
+
+        input(
+        type="text"
+        name="username"
+        placeholder="username"
+        )
+
+        input(
+        type="password"
+        name="password"
+        placeholder="password"
+        )
+
+        input(
+        type="submit"
+        )
+
+    
+
+  div
+    button(onclick="window.location.href='/'") Main Page
+    button(onclick="window.location.href='/AccountCreation'") Create Account

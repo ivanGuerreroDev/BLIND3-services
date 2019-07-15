@@ -1,0 +1,18 @@
+body {
+  padding: 5%;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+input {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+div {
+  margin-left: 5%;
+  margin-bottom: 5%;
+  margin-right: 5%;
+}
+
+a {
+  color: #00B7FF;
+}
