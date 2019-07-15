@@ -4,29 +4,32 @@ block content
   h1= title
   p Welcome to #{title}
 
-    form( id="userAccountCreation" method="POST" action="/accountCreation")
+    form( name="but_submit" id="but_submit" )
     
         input(
         type="text"
         name="email"
+        id="email"
         placeholder="E-mail"
         )
 
         input(
         type="text"
         name="username"
+        id="username"
         placeholder="username"
         )
 
         input(
         type="password"
         name="password"
+        id="password"
         placeholder="password"
         )
 
         input(
         type="password"
-        name="password"
+        name="passwordC"
         placeholder="confirm password"
         )
 
@@ -38,4 +41,4 @@ block content
 
   div
     button(onclick="window.location.href='/'") Main Page
-    button(onclick="window.location.href='/accountCreation'") Create Account
+    button(onclick="window.location.href='/AccountCreation'") Create Account

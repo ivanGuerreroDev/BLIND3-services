@@ -6,13 +6,16 @@ const jwt = require('jsonwebtoken');
 
 /* GET users listing. */
 router.get('/accountCreation', function(req, res, next) {
-  res.render('login', { title: 'Index' });
+  jwt.sign({user: req.body},'secretkey', (err, token) =>{
+    res.render('login', { title: 'Account creation', token: token });
+  });
 });
 
 router.post('/accountCreation', function(req, res, next) {
   console.log(req.body);
   //res.redirect('accountCreation');
   //res.render('login', { title: 'Index' });
+  //res.render('index', { title: 'Index' });
   jwt.sign({user: req.body},'secretkey', (err, token) =>{
     //res.json(db.mycollection.find)
   });
