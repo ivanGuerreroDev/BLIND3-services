@@ -4,22 +4,26 @@ block content
   h1= title
   p Welcome to #{title}
 
-    form( id="userAccountCreation" method="POST" action="/accountCreation")
+    form( name="but_delete" id="but_delete" )
+    
         input(
         type="text"
         name="email"
+        id="email"
         placeholder="E-mail"
         )
 
         input(
         type="text"
         name="username"
+        id="username"
         placeholder="username"
         )
 
         input(
         type="password"
         name="password"
+        id="password"
         placeholder="password"
         )
 

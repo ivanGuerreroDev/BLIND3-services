@@ -44,3 +44,31 @@ $(document).ready(function(){
     });
 
 });
+
+$(document).ready(function(){
+
+    $("#but_delete").click(function(){
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var email = $("#email").val();
+        console.log(username,email,password);
+        if( username !== "" && password !== "" && email !==""){
+            $.ajax({
+                url:'http://localhost:3000/accountCreation',
+                type:'POST',
+                dataType:'json',
+                data:{username:username,password:password,email:email},
+                success:function(response){
+                    var msg = "";
+                    if(response == 1){
+                        window.location = "/";
+                    }else{
+                        msg = "Invalid username and password!";
+                    }
+                    $("#message").html(msg);
+                }
+            });
+        }
+    });
+
+});
