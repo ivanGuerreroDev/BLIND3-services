@@ -6,10 +6,16 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Index' });
 });
 
-router.get('/api', (req, res) => {
-  res.json({
-    message: 'Welcome to the Api'
-  });
+
+
+router.post('/login', (req, res) => {
+  var err = [];
+
+  
+
+  console.log(req.body);
 });
+
+
 
 module.exports = router;

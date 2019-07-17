@@ -1,21 +1,27 @@
 extends layout
-
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Index
+  .row
+    .col
+        #div_login
+        h3 Login
+        input#txt_uname_login.textbox(type='text', name='txt_uname', placeholder='Username')
+        input#txt_pwd_login.textbox(type='password', name='txt_pwd', placeholder='Password')
+        input#but_submit_login(type='button', value='Login', name='but_submit')
+    .col
+
+  .row
+    .col
+      #div_recuperar
+      h3 Recuperar Pass
+        p Solicitar Codigo: 
+          input#but_submit_solicitarCodigo2(type='button', value='Solicitar codigo', name='but_submit')
+          input#txt_correo_recuperar.textbox(type='text', name='txt_email', placeholder='Correo')
+        p Introducir Codigo: 
+          input#txt_codigo_recuperar.textbox(type='text', name='txt_uname', placeholder='codigo')
+          input#but_submit_enviarCodigo2(type='button', value='Enviar Codigo', name='but_submit')
 
   div
-    input(
-      type="text"
-      name="username"
-    )
-    input(
-      type="password"
-      name="password"
-    )
-
-  div
-  
-    button(onclick="hello()") Log in
-    button(onclick="window.location.href='/accountCreation'") Create Account
+    button(onclick="window.location.href='/'") Main Page
+    button(onclick="window.location.href='/AccountCreation'") Create Account
     button(onclick="window.location.href='/accountDelete'") Delete Account

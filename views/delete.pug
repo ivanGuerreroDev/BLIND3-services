@@ -1,10 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Delete User
 
-    form( name="but_delete" id="but_delete" )
+    form( name="but_delete")
     
         input(
         type="text"
@@ -29,6 +28,7 @@ block content
 
         input(
         type="submit"
+        id="but_delete" 
         )
 
   div

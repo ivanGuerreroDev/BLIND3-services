@@ -17,13 +17,16 @@ function hello(){
 
 }*/
 
+
+//Create User
 $(document).ready(function(){
 
-    $("#but_submit").click(function(){
-        var username = $("#username").val();
-        var password = $("#password").val();
-        var email = $("#email").val();
+    $("#but_submit_registro").click(function(){
+        var username = $("#txt_user_registro.textbox").val();
+        var password = $("#txt_pass_registro.textbox").val();
+        var email = $("#txt_email_registro.textbox").val();
         console.log(username,email,password);
+
         if( username !== "" && password !== "" && email !==""){
             $.ajax({
                 url:'http://localhost:3000/accountCreation',
@@ -45,30 +48,61 @@ $(document).ready(function(){
 
 });
 
+//DeleteUser
 $(document).ready(function(){
 
     $("#but_delete").click(function(){
+        
         var username = $("#username").val();
         var password = $("#password").val();
         var email = $("#email").val();
-        console.log(username,email,password);
+
         if( username !== "" && password !== "" && email !==""){
             $.ajax({
-                url:'http://localhost:3000/accountCreation',
+                url:'http://localhost:3000/accountDelete',
                 type:'POST',
                 dataType:'json',
                 data:{username:username,password:password,email:email},
                 success:function(response){
                     var msg = "";
                     if(response == 1){
-                        window.location = "/";
+                        window.location = "/accountDelete";
                     }else{
                         msg = "Invalid username and password!";
                     }
                     $("#message").html(msg);
                 }
-            });
+            })
         }
-    });
+    })
+
+});
+
+//login
+$(document).ready(function(){
+
+    $("#but_submit_login").click(function(){
+        
+        var username = $("#txt_uname_login.textbox").val();
+        var password = $("#txt_pwd_login.textbox").val();
+
+        if( username !== "" && password !== "" ){
+            $.ajax({
+                url:'http://localhost:3000/login',
+                type:'POST',
+                dataType:'json',
+                data:{username:username,password:password},
+                success:function(response){
+                    var msg = "";
+                    if(response == 1){
+                        window.location = "/login";
+                    }else{
+                        msg = "Invalid username and password!";
+                    }
+                    $("#message").html(msg);
+                }
+            })
+        }
+    })
 
 });

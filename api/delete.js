@@ -10,7 +10,9 @@ router.get('/accountDelete', function(req, res, next) {
 });
 
 router.post('/accountDelete', function(req, res, next) {//DELETE Y UPDATE
+
     //console.log(req.body);
+
     mongo.connect(url,{ useNewUrlParser: true }, function(err,client) {
       const db = client.db("heroku_33n7zg9w");
       db.collection('users').deleteMany({ 
@@ -22,13 +24,14 @@ router.post('/accountDelete', function(req, res, next) {//DELETE Y UPDATE
       client.close();
     });
 
-    db.collection('users').updateMany(
+    /*db.collection('users').updateMany(
       { email: "correito@gmail.com" },
       { $set: { email: "PapoPelao@gmail.com" },
         $currentDate: { lastModified: true } })
     .then(function(result) {
       // process result
-    })          
+    })*/ 
+    
     //res.redirect('accountCreation');
     //res.render('login', { title: 'Index' });
     jwt.sign({user: req.body},'secretkey', (err, token) =>{
