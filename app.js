@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./api/index');
 var usersRouter = require('./routes/users');
+var mongoose = require('mongoose');
 var usersAccountCreate = require('./api/createAccount');
 var usersAccountDelete = require('./api/delete');
 const passport = require('passport');
@@ -12,7 +13,18 @@ const session = require('express-session');
 
 
 var app = express();
+// connect to our database
+if (!isProduction) {
+  app.use(errorhandler());
+}
 
+if(isProduction){
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w');
+  mongoose.set('debug', true);
+}
+require('./models');
 //middleware
 
 // view engine setup
