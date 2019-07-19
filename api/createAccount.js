@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
 var mongo = require('mongodb').MongoClient;
-var url = 'mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w';
-
+//var url = 'mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w';
+var mongoose = require('mongoose');
+var User = mongoose.model('Usuarios');
 
 /* GET users listing. */
 router.get('/accountCreation', function(req, res, next) {
@@ -13,9 +14,7 @@ router.get('/accountCreation', function(req, res, next) {
 });
 
 router.post('/accountCreation', function(req, res, next) { //create && //read
-  var dataArray = [];
-  var data;
-  var user = req.body;
+  //var user = req.body;
 
   /*mongo.connect(url, function(err,client) {
       const db = client.db("heroku_33n7zg9w");
@@ -23,16 +22,15 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
       client.close();
     });*/
 
-  mongo.connect(url, { useNewUrlParser: true } , function(err, client) {
-    const db = client.db("heroku_33n7zg9w");
-    
+  
+    var user = User.findOne({username: req.body.username});
+    console.log(user.query);
+      //return done(null, user);
+  
     
     
    //console.log("loco");
    //console.log(dataArray);
-   client.close();
-  });
-
   
   //res.redirect('accountCreation');
   //res.render('login', { title: 'Index' });

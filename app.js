@@ -1,30 +1,32 @@
 var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var indexRouter = require('./api/index');
-var usersRouter = require('./routes/users');
+var isProduction = process.env.NODE_ENV === 'production';
 var mongoose = require('mongoose');
-var usersAccountCreate = require('./api/createAccount');
-var usersAccountDelete = require('./api/delete');
-const passport = require('passport');
-const session = require('express-session');
-
-
-var app = express();
-// connect to our database
-if (!isProduction) {
-  app.use(errorhandler());
-}
-
 if(isProduction){
   mongoose.connect(process.env.MONGODB_URI);
 } else {
   mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w');
   mongoose.set('debug', true);
 }
-require('./models');
+require('./api/models/usuarios');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var indexRouter = require('./api/index');
+var usersRouter = require('./routes/users');
+var usersAccountCreate = require('./api/createAccount');
+var usersAccountDelete = require('./api/delete');
+const passport = require('passport');
+const session = require('express-session');
+var errorhandler = require('errorhandler');
+var port = process.env.PORT || 3000;
+var isProduction = process.env.NODE_ENV === 'production';
+var app = express();
+// connect to our database
+if (!isProduction) {
+  app.use(errorhandler());
+}
+
 //middleware
 
 // view engine setup
