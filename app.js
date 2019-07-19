@@ -16,6 +16,14 @@ var app = express();
 //middleware
 
 // view engine setup
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(session(
+  {
+  secret: 'secret',
+  saveUninitialized: true,
+  resave: true
+}))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));

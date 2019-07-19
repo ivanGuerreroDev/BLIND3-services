@@ -14,26 +14,26 @@ router.get('/accountCreation', function(req, res, next) {
 
 router.post('/accountCreation', function(req, res, next) { //create && //read
   var dataArray = [];
+  var data;
   var user = req.body;
 
-  mongo.connect(url, function(err,client) {
+  /*mongo.connect(url, function(err,client) {
       const db = client.db("heroku_33n7zg9w");
       db.collection('users').insertOne(user);
       client.close();
-    });
+    });*/
 
   mongo.connect(url, { useNewUrlParser: true } , function(err, client) {
     const db = client.db("heroku_33n7zg9w");
-    var cursor = db.collection('users').find();
-    cursor.forEach(function(doc, err) {
-    dataArray.push(doc);
-    //console.log(JSON.stringify(doc, null, 4));
-    //console.log(dataArray);
-    });
+    
+    
+    
    //console.log("loco");
    //console.log(dataArray);
    client.close();
   });
+
+  
   //res.redirect('accountCreation');
   //res.render('login', { title: 'Index' });
   //db.createCollection('mycollection', 'hue', ['mycollection']);
@@ -49,9 +49,7 @@ router.post('/api', function(req, res, next){
   mongo.connect(url, { useNewUrlParser: true } , function(err, client) {
     const db = client.db("heroku_33n7zg9w");
     var cursor = db.collection('users').findOne();
-    cursor.forEach(function(doc, err) {
-    dataArray.push(doc);
-    });
+    
    client.close();
   }).catch(done);
 
