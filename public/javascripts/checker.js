@@ -2,11 +2,6 @@ var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9
 var usernameRegex = /^[a-zA-Z0-9]+$/;
 var passwordRegex = /^[0-9a-zA-Z]{8,}$/
 
-
-function hello(){
-    console.log("hola");
-}
-
 /*function request(req, res){
 
     var a = document.getElementById("but_submit");
@@ -53,9 +48,9 @@ $(document).ready(function(){
 
     $("#but_delete").click(function(){
         
-        var username = $("#username").val();
-        var password = $("#password").val();
-        var email = $("#email").val();
+        var username = $("#but_delete_username").val();
+        var password = $("#but_delete_password").val();
+        var email = $("#but_delete_email").val();
 
         if( username !== "" && password !== "" && email !==""){
             $.ajax({
@@ -83,6 +78,8 @@ $(document).ready(function(){
 
     $("#but_submit_login").click(function(){
         
+        console.log("hola");
+
         var username = $("#txt_uname_login.textbox").val();
         var password = $("#txt_pwd_login.textbox").val();
 

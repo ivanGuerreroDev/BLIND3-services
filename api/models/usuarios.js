@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 var secret = 'LlaveSecreta';
 
 var UserSchema = new mongoose.Schema({
-    username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'is invalid'], index: true},
+    username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[0-9a-zA-Z]{8,}$/, 'is invalid'], index: true},
     email: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
     password: {type: String, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[0-9a-zA-Z]{8,}$/, 'is invalid']},
     hash: String,

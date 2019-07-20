@@ -1,10 +1,11 @@
 var createError = require('http-errors');
 var isProduction = process.env.NODE_ENV === 'production';
 var mongoose = require('mongoose');
+mongoose.set('useCreateIndex', true);
 if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true });
 } else {
-  mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w');
+  mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', { useNewUrlParser: true });
   mongoose.set('debug', true);
 }
 require('./api/models/usuarios');

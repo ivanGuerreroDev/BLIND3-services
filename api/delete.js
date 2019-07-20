@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
-var mongo = require('mongodb').MongoClient;
-var url = 'mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w';
+var mongoose = require('mongoose');
+var User = mongoose.model('Usuarios');
 
 /* GET users listing. */
 router.get('/accountDelete', function(req, res, next) {
@@ -12,16 +12,11 @@ router.get('/accountDelete', function(req, res, next) {
 router.post('/accountDelete', function(req, res, next) {//DELETE Y UPDATE
 
     //console.log(req.body);
-
-    mongo.connect(url,{ useNewUrlParser: true }, function(err,client) {
-      const db = client.db("heroku_33n7zg9w");
-      db.collection('users').deleteMany({ 
-        email: req.body.email
-      })
-      .then(function(result) {
-        // process result
-      })
-      client.close();
+    console.log(req.body);
+  
+    User.deleteOne({username: req.body.username, email: req.body.email, password:req.body.password}, function (err) {
+      if (err) console.log(err);
+      // deleted at most one tank document
     });
 
     /*db.collection('users').updateMany(
@@ -34,9 +29,7 @@ router.post('/accountDelete', function(req, res, next) {//DELETE Y UPDATE
     
     //res.redirect('accountCreation');
     //res.render('login', { title: 'Index' });
-    jwt.sign({user: req.body},'secretkey', (err, token) =>{
-        
-    });
+    
   });
 
 module.exports = router;
