@@ -7,8 +7,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Index' });
 });
 
-
-
 router.post('/login', (req, res) => {
   var err = [];
   console.log(req.body);
