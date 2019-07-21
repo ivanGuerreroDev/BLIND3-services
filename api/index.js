@@ -36,7 +36,6 @@ router.post('/login', (req, res) => {
       })(req, res, next);
     });*/
   
-  
 });
 
 

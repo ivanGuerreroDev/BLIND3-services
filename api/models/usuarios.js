@@ -5,12 +5,10 @@ var jwt = require('jsonwebtoken');
 var secret = 'LlaveSecreta';
 
 var UserSchema = new mongoose.Schema({
-    username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[0-9a-zA-Z]{8,}$/, 'is invalid'], index: true},
+    username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
     email: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
-    password: {type: String, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[0-9a-zA-Z]{8,}$/, 'is invalid']},
     hash: String,
     salt: String,
-    image: {type: String, default: '/assets/images/avatars/smiley-cyrus.jpg'},
 }, {timestamps: true});
 
 

@@ -9,6 +9,7 @@ if(isProduction){
   mongoose.set('debug', true);
 }
 require('./api/models/usuarios');
+require('./api/models/keys');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -18,11 +19,13 @@ var usersRouter = require('./routes/users');
 var usersAccountCreate = require('./api/createAccount');
 var usersAccountDelete = require('./api/delete');
 const passport = require('passport');
+var nodeMailer = require('nodemailer');
 const session = require('express-session');
 var errorhandler = require('errorhandler');
 var port = process.env.PORT || 3000;
 var isProduction = process.env.NODE_ENV === 'production';
 var app = express();
+
 // connect to our database
 if (!isProduction) {
   app.use(errorhandler());

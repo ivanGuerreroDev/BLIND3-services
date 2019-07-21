@@ -20,6 +20,7 @@ $(document).ready(function(){
         var username = $("#txt_user_registro.textbox").val();
         var password = $("#txt_pass_registro.textbox").val();
         var email = $("#txt_email_registro.textbox").val();
+        var key = 'secret';
         console.log(username,email,password);
 
         if( username !== "" && password !== "" && email !==""){
@@ -27,13 +28,73 @@ $(document).ready(function(){
                 url:'http://localhost:3000/accountCreation',
                 type:'POST',
                 dataType:'json',
-                data:{username:username,password:password,email:email},
+                data:{username:username,password:password,email:email,key:key},
                 success:function(response){
                     var msg = "";
-                    if(response == 1){
+                    console.log(response);
+                    if(response.valid == 1){
                         window.location = "/";
                     }else{
                         msg = "Invalid username and password!";
+                    }
+                    $("#message").html(msg);
+                }
+            });
+        }
+    });
+
+});
+
+//Request Code
+$(document).ready(function(){
+
+    $("#but_submit_solicitarCodigo").click(function(){
+        var email = $("#txt_correo_registro.textbox").val();
+        var key = 'secret';
+        console.log(email);
+
+        if(email !==""){
+            $.ajax({
+                url:'http://localhost:3000/permission',
+                type:'POST',
+                dataType:'json',
+                data:{email:email,key:key},
+                success:function(response){
+                    var msg = "";
+                    console.log(response);
+                    if(response.valid == 1){
+                        //window.location = "/accountCreation";
+                    }else{
+                        msg = "Invalid email!";
+                    }
+                    $("#message").html(msg);
+                }
+            });
+        }
+    });
+
+});
+
+//Send Code
+$(document).ready(function(){
+
+    $("#but_submit_enviarCodigo").click(function(){
+        var code = $("#txt_codigo_registro.textbox").val();
+        var key = 'secret';
+
+        if(code !==""){
+            $.ajax({
+                url:'http://localhost:3000/allowing',
+                type:'POST',
+                dataType:'json',
+                data:{code: code,key:key},
+                success:function(response){
+                    var msg = "";
+                    console.log(response);
+                    if(response.valid == 1){
+                        //window.location = "/accountCreation";
+                    }else{
+                        msg = "Invalid Code!";
                     }
                     $("#message").html(msg);
                 }
