@@ -31,6 +31,7 @@ function makeid(length) {
 router.post('/accountCreation', function(req, res, next) { //create && //read
 
   //console.log(req.body);
+  var exist = 0;
 
   if(req.body.key == 'secret'){
     var email = req.body.email;
@@ -38,7 +39,16 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
     User.findOne({email: email},function(err,user){
       //console.log(user);
       if(user){
-          user.deleteOne();
+        if(user == req.body.username){
+
+          var valid = 0;
+          exist = 1;
+          var msg = 'Invalid Request: User Already Exist';
+          res.send({msg:msg,valid:valid});
+          
+      }else{
+
+        user.deleteOne();
           newUser = new User();
           newUser.username = req.body.username;
           newUser.email = email;
@@ -56,11 +66,15 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
             // saved!
             })
 
+      }
     }else{
 
+      
+      if(exist == 0){
       var valid = 0;
       var msg = 'Invalid Request: You did not ask for a code yet or did not send it';
       res.send({msg:msg,valid:valid});
+      }
 
     }
 
