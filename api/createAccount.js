@@ -154,12 +154,12 @@ router.post('/permission', function(req, res, next){
                     port: 465,
                     secure: true,
                     auth: {
-                        user: 'thedanidacosta@gmail.com',
-                        pass: 'DaNiDaCoStA1998'
+                      user: 'noreplybusient@gmail.com',
+                      pass: 'BuSiNeT1'
                     }
                 });
                 let mailOptions = {
-                    from: '"Daniel Da Costa" <thedanidacosta@gmail.com>', // sender address
+                    from: '"Businet" <noreplybusient@gmail.com>', // sender address
                     to: email, // list of receivers
                     subject: "Verification Code from Businet", // Subject line
                     text: "Verification Code", // plain text body
@@ -277,14 +277,14 @@ router.post('/recovery', function(req,res,next){
                   port: 465,
                   secure: true,
                   auth: {
-                      user: 'thedanidacosta@gmail.com',
-                      pass: 'DaNiDaCoStA1998'
+                      user: 'noreplybusient@gmail.com',
+                      pass: 'BuSiNeT1'
                   }
               });
               let mailOptions = {
-                  from: '"Daniel Da Costa" <thedanidacosta@gmail.com>', // sender address
+                  from: '"No-Reply Businet" <noreplybusient@gmail.com>', // sender address
                   to: email, // list of receivers
-                  subject: "Recovery Code from Businet", // Subject line
+                  subject: "Recovery password Code from Businet", // Subject line
                   text: "Recovery Code", // plain text body
                   html: '<b>The Recovery Code is: '+code+'</b>' // html body
               };
@@ -326,5 +326,10 @@ router.post('/recovery', function(req,res,next){
 
 });
 
+router.post('/sendRecovery', function(req,res,next){
+
+
+
+});
 
 module.exports = router;

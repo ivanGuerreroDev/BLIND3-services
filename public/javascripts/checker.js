@@ -135,7 +135,7 @@ $(document).ready(function(){
 
 });
 
-//Password Recovery
+//Password Recovery Step 1
 $(document).ready(function(){
 
     $("#but_submit_solicitarCodigo2").click(function(){
@@ -150,6 +150,38 @@ $(document).ready(function(){
                 type:'POST',
                 dataType:'json',
                 data:{key: key,email:email},
+                success:function(response){
+                    var msg = "";
+                    console.log(response);
+                    if(response == 1){
+                        window.location = "/";
+                    }else{
+                        
+                    }
+                    $("#message").html(msg);
+                }
+            })
+        }
+    })
+
+});
+
+//Password Recovery Step 2
+$(document).ready(function(){
+
+    $("#but_submit_enviarCodigo2").click(function(){
+        
+        var email = $("#txt_correo_recuperar.textbox").val();
+        var code = $("#txt_codigo_recuperar.textbox").val();
+        var key = 'secret';
+        console.log(email);
+
+        if(code !=="" && email !==""){
+            $.ajax({
+                url:'http://localhost:3000/recovery',
+                type:'POST',
+                dataType:'json',
+                data:{code: code, key: key,email:email},
                 success:function(response){
                     var msg = "";
                     console.log(response);
