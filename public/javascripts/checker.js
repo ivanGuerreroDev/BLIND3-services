@@ -33,7 +33,7 @@ $(document).ready(function(){
                     var msg = "";
                     console.log(response);
                     if(response.valid == 1){
-                        window.location = "/";
+                        console.log("valido")
                     }else{
                         msg = "Invalid username and password!";
                     }

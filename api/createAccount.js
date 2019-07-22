@@ -37,18 +37,20 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
     var email = req.body.email;
 
     User.findOne({email: email},function(err,user){
-      //console.log(user);
+      console.log(user);
       if(user){
-        if(user == req.body.username){
+      
+        if(user.username == req.body.username){
 
           var valid = 0;
           exist = 1;
           var msg = 'Invalid Request: User Already Exist';
+          console.log(msg);
           res.send({msg:msg,valid:valid});
           
-      }else{
+        }else{
 
-        user.deleteOne();
+          user.deleteOne();
           newUser = new User();
           newUser.username = req.body.username;
           newUser.email = email;
@@ -61,7 +63,7 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
             if (err) errorhandler(err);
     
             var valid = 1;
-            var msg = 'Valid Request, Proceed to Account Creation'
+            var msg = 'Account Created'
             res.send({msg:msg,valid:valid});
             // saved!
             })
