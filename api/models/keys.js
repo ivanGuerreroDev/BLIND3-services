@@ -8,6 +8,7 @@ var secret = require('../../config').secret;
 var keySchema = new mongoose.Schema({
   email: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
   exp: Date,
+  type: {type: String, enum: ['Creation','Recovery'], required: true},
   tokenReg: String,
 
 }, {timestamps: true});

@@ -19,7 +19,7 @@ router.get('/accountCreation', function(req, res, next) {
 
 function makeid(length) {
   var result           = '';
-  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   var charactersLength = characters.length;
   for ( var i = 0; i < length; i++ ) {
      result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -37,9 +37,9 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
     var email = req.body.email;
 
     User.findOne({email: email},function(err,user){
-      console.log(user);
+      //console.log(user);
       if(user){
-      
+        
         if(user.username == req.body.username){
 
           var valid = 0;
@@ -49,25 +49,34 @@ router.post('/accountCreation', function(req, res, next) { //create && //read
           res.send({msg:msg,valid:valid});
           
         }else{
+          
+          Key.findOne({email: user.email},function(err,key){
+            if(key.type == 'Creation'){
+            key.deleteOne();
+            user.deleteOne();
+            newUser = new User();
+            newUser.username = req.body.username;
+            newUser.email = email;
+            newUser.setPassword(req.body.password);
+            
 
-          user.deleteOne();
-          newUser = new User();
-          newUser.username = req.body.username;
-          newUser.email = email;
-          newUser.setPassword(req.body.password);
-
-          //User.deleteOne({email: email});
+            //User.deleteOne({email: email});
+          
+              newUser.save(function (err) {
+                console.log("actualizado");
+                if (err) errorhandler(err);
         
-          newUser.save(function (err) {
-            console.log("actualizado");
-            if (err) errorhandler(err);
-    
-            var valid = 1;
-            var msg = 'Account Created'
-            res.send({msg:msg,valid:valid});
-            // saved!
-            })
-
+                var valid = 1;
+                var msg = 'Account Created'
+                res.send({msg:msg,valid:valid});
+                // saved!
+              })
+            }else{
+              var valid = 0;
+              var msg = 'User Already Exists'
+              res.send({msg:msg,valid:valid});
+            }
+          })
       }
     }else{
 
@@ -108,6 +117,7 @@ router.post('/permission', function(req, res, next){
     console.log("Genero Fecha");
     key.generateExpDate();
     console.log(key.key);
+    key.type = 'Creation';
   
     console.log("Entro a verificar");
 
@@ -189,9 +199,9 @@ router.post('/allowing', function(req, res, next){
 
     var code = req.body.code;
 
-    Key.findOne({tokenReg: code},function(err,key){
-
-      if(key){
+    Key.findOne({email: req.body.email,tokenReg: code},function(err,key){
+      //console.log(key);
+      if(key.type == 'Creation'){
         
         var user = new User();
         user.username = key._id;
@@ -209,16 +219,112 @@ router.post('/allowing', function(req, res, next){
       }else{
 
         var valid = 0;
-        var msg = 'Key does not exist';
+        var msg = 'Key does not exist or Email did not request a code';
         res.send({msg:msg,valid:valid});
 
       }
 
     })
 
+  }else{
+    var valid = 0;
+    var msg = 'Invalid Request';
+    res.send({msg:msg,valid:valid});
   }
 
-})
+});
+
+router.post('/recovery', function(req,res,next){
+  console.log('paso');
+  if(req.body.key == "secret"){
+
+    var email = req.body.email;
+
+    User.findOne({email:email}, function(err,user){
+      if(user){
+        console.log('user')
+        Key.findOne({email:user.email}, function(err,key){
+          if(key){
+              if(key.type == 'Creation'){
+
+                var valid = 0;
+                var msg = 'Your account is not created yet';
+                res.send({msg:msg,valid:valid});
+
+              }else{
+                
+                var valid = 0;
+                var msg = 'You already Requested a Recovery Code';
+                res.send({msg:msg,valid:valid});
+                
+          }  
+
+        }else{
+          
+          var code = makeid(5);
+          var key = new Key();
+          key.email = email;
+          key.tokenReg = code;
+          key.generateExpDate();
+          key.type = 'Recovery';
+          key.save(function(err){
+            if (err) errorhandler(err);
+            
+            console.log("Envio el correo");
+
+              let transporter = nodeMailer.createTransport({
+                  host: 'smtp.gmail.com',
+                  port: 465,
+                  secure: true,
+                  auth: {
+                      user: 'thedanidacosta@gmail.com',
+                      pass: 'DaNiDaCoStA1998'
+                  }
+              });
+              let mailOptions = {
+                  from: '"Daniel Da Costa" <thedanidacosta@gmail.com>', // sender address
+                  to: email, // list of receivers
+                  subject: "Recovery Code from Businet", // Subject line
+                  text: "Recovery Code", // plain text body
+                  html: '<b>The Recovery Code is: '+code+'</b>' // html body
+              };
+
+              transporter.sendMail(mailOptions, (error, info) => {
+                  if (error) {
+                      return console.log(error);
+                  }
+                  console.log('Message %s sent: %s', info.messageId, info.response);
+                      
+                  });
+
+          });
+
+          var valid = 1;
+          var msg = 'Code sent to your email';
+          res.send({msg:msg,valid:valid});
+    
+        }
+
+      })
+
+      }else{
+
+        var valid = 0;
+        var msg = 'Email does not exists';
+        res.send({msg:msg,valid:valid});
+
+      }
+
+    })
+    
+
+  }else{
+    var valid = 0;
+    var msg = 'Invalid Request';
+    res.send({msg:msg,valid:valid});
+  }
+
+});
 
 
 module.exports = router;

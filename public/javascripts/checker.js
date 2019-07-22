@@ -80,6 +80,7 @@ $(document).ready(function(){
 
     $("#but_submit_enviarCodigo").click(function(){
         var code = $("#txt_codigo_registro.textbox").val();
+        var email = $("#txt_correo_registro.textbox").val();
         var key = 'secret';
 
         if(code !==""){
@@ -87,7 +88,7 @@ $(document).ready(function(){
                 url:'http://localhost:3000/allowing',
                 type:'POST',
                 dataType:'json',
-                data:{code: code,key:key},
+                data:{email:email,code:code,key:key},
                 success:function(response){
                     var msg = "";
                     console.log(response);
@@ -125,6 +126,37 @@ $(document).ready(function(){
                         window.location = "/accountDelete";
                     }else{
                         msg = "Invalid username and password!";
+                    }
+                    $("#message").html(msg);
+                }
+            })
+        }
+    })
+
+});
+
+//Password Recovery
+$(document).ready(function(){
+
+    $("#but_submit_solicitarCodigo2").click(function(){
+        
+        var email = $("#txt_correo_recuperar.textbox").val();
+        var key = 'secret';
+        console.log(email);
+
+        if(email !==""){
+            $.ajax({
+                url:'http://localhost:3000/recovery',
+                type:'POST',
+                dataType:'json',
+                data:{key: key,email:email},
+                success:function(response){
+                    var msg = "";
+                    console.log(response);
+                    if(response == 1){
+                        window.location = "/";
+                    }else{
+                        
                     }
                     $("#message").html(msg);
                 }
