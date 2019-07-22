@@ -10,7 +10,7 @@ var keySchema = new mongoose.Schema({
   exp: Date,
   type: {type: String, enum: ['Creation','Recovery'], required: true},
   tokenReg: String,
-
+  allowedToRecover: {type: Boolean, default: false}
 }, {timestamps: true});
 keySchema.plugin(uniqueValidator, {error: 'is already taken.'});
 

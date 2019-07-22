@@ -267,6 +267,7 @@ router.post('/recovery', function(req,res,next){
           key.tokenReg = code;
           key.generateExpDate();
           key.type = 'Recovery';
+          key.allowedToRecover = false;
           key.save(function(err){
             if (err) errorhandler(err);
             
@@ -328,8 +329,153 @@ router.post('/recovery', function(req,res,next){
 
 router.post('/sendRecovery', function(req,res,next){
 
+  if(req.body.key == 'secret'){
+    var email = req.body.email;
+    var code = req.body.code;
 
+    Key.findOne({email:email, tokenReg:code},function(err,key){
+      if(key){
+        if(key.type == 'Creation'){
+          var valid = 0;
+          var msg = 'Invalid Request, your account is not created yet';
+          res.send({msg:msg,valid:valid});
+
+        }else{
+
+          var email = key.email;
+          key.allowedToRecover = true;
+          key.save(function(err){
+            if (err) errorhandler(err);
+            
+            console.log("Envio el correo para notificar el recovery");
+
+              let transporter = nodeMailer.createTransport({
+                  host: 'smtp.gmail.com',
+                  port: 465,
+                  secure: true,
+                  auth: {
+                      user: 'noreplybusient@gmail.com',
+                      pass: 'BuSiNeT1'
+                  }
+              });
+              let mailOptions = {
+                  from: '"No-Reply Businet" <noreplybusient@gmail.com>', // sender address
+                  to: email, // list of receivers
+                  subject: "Recovery Accepted, Proceed to recover your Email", // Subject line
+                  text: "Recovery Code", // plain text body
+                  html: '<b>The Recovery is Ready, go to the mainpage and recover your password!</b>' // html body
+              };
+
+              transporter.sendMail(mailOptions, (error, info) => {
+                  if (error) {
+                      return console.log(error);
+                  }
+                  console.log('Message %s sent: %s', info.messageId, info.response);
+                      
+                  });
+
+          });
+
+          var valid = 1;
+          var msg = 'Email sent, Please proceed to put a new password';
+          res.send({msg:msg,valid:valid});
+        
+       }
+      }else{
+
+        var valid = 0;
+        var msg = 'You did not ask for a code yet';
+        res.send({msg:msg,valid:valid});
+
+      }
+
+    })
+    
+  }else{
+
+    var valid = 0;
+    var msg = 'Invalid Request';
+    res.send({msg:msg,valid:valid});
+
+  }
 
 });
+
+router.post('/newPass', function(req,res,next){
+  
+  if(req.body.key == "secret"){
+    var email = req.body.email;
+    var code = req.body.code;
+    var password = req.body.password;
+    //console.log(password);
+    Key.findOne({email:email, tokenReg:code},function(err,key){
+      if(key){
+        if(key.type == 'Creation' && key.allowedToRecover == false){
+          var valid = 0;
+          var msg = 'Invalid Request, your account is not created yet';
+          res.send({msg:msg,valid:valid});
+
+        }else{
+          //console.log(password);
+          User.findOne({email: key.email}, function(err, user){
+            //console.log(password);
+            user.setPassword(password);
+            user.save(function(err){
+              if (err) errorhandler(err);
+              
+              //console.log("Envio el correo para notificar la nueva contraseña");
+  
+                let transporter = nodeMailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: 'noreplybusient@gmail.com',
+                        pass: 'BuSiNeT1'
+                    }
+                });
+                let mailOptions = {
+                    from: '"No-Reply Businet" <noreplybusient@gmail.com>', // sender address
+                    to: email, // list of receivers
+                    subject: "Recovery Accepted, Your password has change", // Subject line
+                    text: "Recovery Code", // plain text body
+                    html: 'The Recovery is Ready, Your password has change Your new password is: <b>'+ password +'</b>' // html body
+                };
+  
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message %s sent: %s', info.messageId, info.response);
+                        
+                    });
+  
+            });
+          })
+          
+          key.deleteOne();
+          var valid = 1;
+          var msg = 'Your password has changed';
+          res.send({msg:msg,valid:valid});
+        
+       }
+      }else{
+
+        var valid = 0;
+        var msg = 'You did not ask for a code yet';
+        res.send({msg:msg,valid:valid});
+
+      }
+
+    })
+
+  }else{
+    var valid = 0;
+    var msg = 'Invalid Request';
+    res.send({msg:msg,valid:valid});
+  }
+
+})
+
 
 module.exports = router;

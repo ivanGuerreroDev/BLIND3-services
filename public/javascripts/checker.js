@@ -178,10 +178,44 @@ $(document).ready(function(){
 
         if(code !=="" && email !==""){
             $.ajax({
-                url:'http://localhost:3000/recovery',
+                url:'http://localhost:3000/sendRecovery',
                 type:'POST',
                 dataType:'json',
                 data:{code: code, key: key,email:email},
+                success:function(response){
+                    var msg = "";
+                    console.log(response);
+                    if(response == 1){
+                        window.location = "/";
+                    }else{
+                        
+                    }
+                    $("#message").html(msg);
+                }
+            })
+        }
+    })
+
+});
+
+
+//Password Recovery Step 3
+$(document).ready(function(){
+
+    $("#but_submit_recuperar").click(function(){
+        
+        var email = $("#txt_correo_recuperar.textbox").val();
+        var code = $("#txt_codigo_recuperar.textbox").val();
+        var password = $("#txt_pass_recuperar").val();
+        var key = 'secret';
+        console.log(password);
+
+        if(password !=="" && code !=="" && email !==""){
+            $.ajax({
+                url:'http://localhost:3000/newPass',
+                type:'POST',
+                dataType:'json',
+                data:{code: code, key: key, email:email, password: password},
                 success:function(response){
                     var msg = "";
                     console.log(response);

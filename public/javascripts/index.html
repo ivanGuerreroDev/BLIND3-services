@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Login page with jQuery and AJAX</title>
+
+        <script src="jquery-3.2.1.min.js" type="text/javascript"></script>
+        <script src="checker.js" type="text/javascript"></script>
+        <style>
+          .container{max-width: 700px; margin:20px auto}
+          .row{display:flex;}
+          .col{flex:1; padding:0 10px}
+          #div_resp{position: fixed; bottom:0; right:0; background: green; color:white;padding:20px 50px}
+          input{width: 100%; clear:both; margin-bottom: 6px}
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+              $("#but_submit_login").click(function(){
+                var username = $("#txt_uname_login").val().trim();
+                var password = $("#txt_pwd_login").val().trim();
+                if( username != "" && password != "" ){
+                  $.ajax({
+                      url:'https://localhost:3000/api/login',
+                      type:'post',
+                      headers: {"Authorization": "clavesecreta"},
+                      data:{username:username,password:password},
+                      success:function(response){
+                          var msg = "";
+                          if(response.status=='ok'){
+                              msg = "Usuario Logueado"
+                          }else{
+                              msg = "Invalid username and password!";
+                          }
+                          $("#message").html(msg);
+                      }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              $("#but_submit_solicitarCodigo").click(function(){
+                var correo = $("#txt_correo_registro").val().trim();
+                if(correo != "" ){
+                  $.ajax({
+                    url:'https://localhost:3000/api/solicitarCodigo',
+                    type:'post',
+                    headers: {"Authorization": "clavesecreta"},
+                    data:{correo:correo},
+                    success:function(response){
+                      var msg = "";
+                      if(response.status=='ok'){
+                          msg = "Correo enviado revisa tu bandeja de entrada"
+                      }else{
+                          msg = "Error";
+                      }
+                      $("#message").html(msg);
+                    }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              var autorizacion;
+              $("#but_submit_enviarCodigo").click(function(){
+                var correo = $("#txt_correo_registro").val().trim();
+                var codigo = $("#txt_codigo_registro").val().trim();
+                if(correo != "" && codigo != "" ){
+                  $.ajax({
+                    url:'https://localhost:3000/api/enviarCodigo',
+                    type:'post',
+                    headers: {"Authorization": "clavesecreta"},
+                    data:{correo:correo, codigo:codigo},
+                    success:function(response){
+                      var msg = "";
+                      if(response.status=='ok'){
+                          msg = "Autorizado!"
+                          autorizacion = response.resp
+                      }else{
+                          msg = "Error";
+                      }
+                      $("#message").html(msg);
+                    }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              $("#but_submit_registro").click(function(){
+                var nombre = $("#txt_nombre_registro").val().trim();
+                var correo = $("#txt_correo_registro").val().trim();
+                var username = $("#txt_usuario_registro").val().trim();
+                var password = $("#txt_pass_registro").val().trim();
+                if( username != "" && password != "" && nombre != "" && correo != ""){
+                  $.ajax({
+                      url:'https://localhost:3000/api/registro',
+                      type:'post',
+                      headers: {"Authorization": "clavesecreta"},
+                      data:{nombre:nombre,correo:correo,username:username,password:password, autorizacion: autorizacion},
+                      success:function(response){
+                          var msg = "";
+                          if(response.status=='ok'){
+                              msg = "Usuario Registrado"
+                          }else{
+                              msg = "Error";
+                          }
+                          $("#message").html(msg);
+                      }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              $("#but_submit_solicitarCodigo2").click(function(){
+                var correo = $("#txt_correo_recuperar").val().trim();
+                if(correo != "" ){
+                  $.ajax({
+                    url:'https://localhost:3000/api/solicitarCodigoRecuperacion',
+                    type:'post',
+                    headers: {"Authorization": "clavesecreta"},
+                    data:{correo:correo},
+                    success:function(response){
+                      var msg = "";
+                      if(response.status=='ok'){
+                          msg = "Correo enviado revisa tu bandeja de entrada"
+                      }else{
+                          msg = "Error";
+                      }
+                      $("#message").html(msg);
+                    }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              var autorizacion2;
+              $("#but_submit_enviarCodigo2").click(function(){
+                var correo = $("#txt_correo_recuperar").val().trim();
+                var codigo = $("#txt_codigo_recuperar").val().trim();
+                if(correo != "" && codigo != "" ){
+                  $.ajax({
+                    url:'https://localhost:3000/api/enviarCodigoRecuperacion',
+                    type:'post',
+                    headers: {"Authorization": "clavesecreta"},
+                    data:{correo:correo, codigo:codigo},
+                    success:function(response){
+                      var msg = "";
+                      if(response.status=='ok'){
+                          msg = "Autorizado!"
+                          autorizacion = response.resp
+                      }else{
+                          msg = "Error";
+                      }
+                      $("#message").html(msg);
+                    }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+              $("#but_submit_recuperar").click(function(){
+                var correo = $("#txt_correo_recuperar").val().trim();
+                var password = $("#txt_pass_recuperar").val().trim();
+                if( password != "" && correo != ""){
+                  $.ajax({
+                      url:'https://localhost:3000/api/recuperarPass',
+                      type:'post',
+                      headers: {"Authorization": "clavesecreta"},
+                      data:{correo:correo,password:password, autorizacion: autorizacion2},
+                      success:function(response){
+                          var msg = "";
+                          if(response.status=='ok'){
+                              msg = "Contraseña cambiada"
+                          }else{
+                              msg = "Error";
+                          }
+                          $("#message").html(msg);
+                      }
+                  });
+                }else{$("#message").html('debe rellenar todos los campos');}
+              });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+          <h1>Peticiones de usuario</h1>
+          <div class="row">
+            <div class="col">
+              <div id="div_login">
+                <h3>Login</h3>              
+                <input type="text" class="textbox" id="txt_uname_login" name="txt_uname" placeholder="Username" />
+                <input type="password" class="textbox" id="txt_pwd_login" name="txt_pwd" placeholder="Password"/>          
+                <input type="button" value="Login" name="but_submit" id="but_submit_login" />
+              </div>
+            </div>
+            <div class="col">
+              <div id="div_registro">
+                <h3>Registro</h3>
+                <p>codigo</p>
+                <input type="button" value="Solicitar codigo" name="but_submit" id="but_submit_solicitarCodigo" />
+                <input type="text" class="textbox" id="txt_correo_registro" name="txt_email" placeholder="Correo"/>
+                <input type="text" class="textbox" id="txt_codigo_registro" name="txt_uname" placeholder="codigo" />
+                <input type="button" value="Enviar Codigo" name="but_submit" id="but_submit_enviarCodigo" />
+                <p>registro</p>
+                <input type="text" class="textbox" id="txt_nombre_registro" name="txt_uname" placeholder="nombres" />
+                <input type="text" class="textbox" id="txt_usuario_registro" name="txt_pwd" placeholder="usuario"/>
+                <input type="password" class="textbox" id="txt_pass_registro" name="txt_pwd" placeholder="Password"/>
+                <input type="button" value="Registrarse" name="but_submit" id="but_submit_registro" />
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <div id="div_recuperar">
+                <h3>Recuperar Pass</h3>
+                <p>codigo</p>
+                <input type="button" value="Solicitar codigo" name="but_submit" id="but_submit_solicitarCodigo2" />
+                <input type="text" class="textbox" id="txt_correo_recuperar" name="txt_email" placeholder="Correo"/>
+                <input type="text" class="textbox" id="txt_codigo_recuperar" name="txt_uname" placeholder="codigo" />
+                <input type="button" value="Enviar Codigo" name="but_submit" id="but_submit_enviarCodigo2" />
+                <p>registro</p>
+                <input type="password" class="textbox" id="txt_pass_recuperar" name="txt_pwd" placeholder="Password"/>
+                <input type="button" value="Recuperar Pass" name="but_submit" id="but_submit_recuperar" />
+              </div>
+            </div>
+            <div class="col"></div>
+          </div>
+        </div>
+        <div id="div_resp">
+            <h3 style="text-align: center">Respuesta del ajax</h1>
+            <p id="message" style="text-align: center"></p>
+          </div>
+    </body>
+</html>
+
