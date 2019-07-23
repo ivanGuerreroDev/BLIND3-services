@@ -7,6 +7,7 @@ var secret = 'LlaveSecreta';
 var UserSchema = new mongoose.Schema({
     username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
     email: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/\S+@\S+\.\S+/, 'is invalid'], index: true},
+    nombresyapellidos: String,
     hash: String,
     salt: String,
 }, {timestamps: true});
