@@ -1,6 +1,6 @@
 
 let jwt = require('jsonwebtoken');
-const config = require('../config');
+const config = require('../../config');
 
 let checkToken = (req, res, next) => {
   console.log('activado mid')
@@ -28,5 +28,3 @@ let checkToken = (req, res, next) => {
 module.exports = {
   checkToken: checkToken
 }
-
-view rawmiddleware.js hosted with ❤ by GitHub

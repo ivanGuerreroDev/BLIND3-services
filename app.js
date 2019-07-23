@@ -22,10 +22,7 @@ var port = process.env.PORT || 3000;
 var isProduction = process.env.NODE_ENV === 'production';
 var app = express();
 
-<<<<<<< HEAD
-=======
-import {checkToken} from './api/middlewares/token';
->>>>>>> 0.22.7.2019.19.30
+const token = require('./api/middlewares/token') ;
 // connect to our database
 if (!isProduction) {
   app.use(errorhandler());
@@ -60,7 +57,7 @@ app.use(passport.session());
 
 
 var indexRouter = require('./api/routes/index');
-app.use('/api', checkToken, indexRouter);
+app.use('/api', token.checkToken, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
