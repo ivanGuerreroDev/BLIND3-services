@@ -1,3 +1,4 @@
+<<<<<<< HEAD:api/createAccount.js
 var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -478,4 +479,53 @@ router.post('/newPass', function(req,res,next){
 })
 
 
+=======
+var express = require('express');
+var router = express.Router();
+const jwt = require('jsonwebtoken');
+//var mongo = require('mongodb').MongoClient;
+//var url = 'mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w';
+var mongoose = require('mongoose');
+var User = mongoose.model('Usuarios');
+var errorhandler = require('errorhandler');
+
+router.post('/accountCreation', function(req, res, next) { //create && //read
+    var user = new User();
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.setPassword(req.body.password);
+    user.password = req.body.password;
+    
+    user.save(function (err) {
+    if (err) errorhandler(err);
+    res.redirect('/');
+    });
+  
+    //user.findOne();
+    //console.log(user.query);
+      //return done(null, user);
+  
+    
+    
+   //console.log("loco");
+   //console.log(dataArray);
+  
+  //res.redirect('accountCreation');
+  //res.render('login', { title: 'Index' });
+  //db.createCollection('mycollection', 'hue', ['mycollection']);
+  //res.render('index', { title: 'Index' });
+  /*jwt.sign({user: req.body},'secretkey', (err, token) =>{
+    //res.json(db.mycollection.find)
+  });*/
+
+  //res.render('index', { title: dataArray } );
+});
+
+router.post('/accountDelete', function(req, res, next) {//DELETE Y UPDATE
+  User.deleteOne({username: req.body.username, email: req.body.email, password:req.body.password}, function (err) {
+    if (err) console.log(err);
+  });    
+});
+
+>>>>>>> 0.22.7.2019.19.30:api/routes/usuarios/index.js
 module.exports = router;

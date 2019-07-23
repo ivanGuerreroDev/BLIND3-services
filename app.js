@@ -14,10 +14,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var indexRouter = require('./api/index');
-var usersRouter = require('./routes/users');
-var usersAccountCreate = require('./api/createAccount');
-var usersAccountDelete = require('./api/delete');
 const passport = require('passport');
 var nodeMailer = require('nodemailer');
 const session = require('express-session');
@@ -26,6 +22,10 @@ var port = process.env.PORT || 3000;
 var isProduction = process.env.NODE_ENV === 'production';
 var app = express();
 
+<<<<<<< HEAD
+=======
+import {checkToken} from './api/middlewares/token';
+>>>>>>> 0.22.7.2019.19.30
 // connect to our database
 if (!isProduction) {
   app.use(errorhandler());
@@ -58,10 +58,9 @@ app.use(session(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
-app.use('/', usersRouter);
-app.use('/', usersAccountCreate);
-app.use('/', usersAccountDelete);
+
+var indexRouter = require('./api/routes/index');
+app.use('/api', checkToken, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
