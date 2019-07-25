@@ -5,7 +5,21 @@ var nodeMailer = require('nodemailer');
 var mongoose = require('mongoose');
 var User = mongoose.model('Usuarios');
 var Key = mongoose.model('Keys');
+var passport = require('passport');
 const token = require('../../middlewares/token') ;
+
+router.post('/login', function(req, res, next){
+  passport.authenticate('app', {
+    session: false,
+    badRequestMessage: 'Debe rellenar todos los campos.'
+  }, function(err, user, info){
+    if(!user || err){ 
+      return res.json({success : false, info: info, error: err}); 
+    } 
+    user.token = user.generateJWT();
+    return res.json({success : true, user: user.toAuthJSON()});
+  })(req, res, next);
+});
 
 
 router.post('/accountCreation', function(req, res, next) { //create && //read

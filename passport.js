@@ -14,3 +14,19 @@ passport.use(new LocalStrategy(
         }).catch(done);
     }
 ));
+
+passport.use('app',new LocalStrategy(
+    function(username, password, done) {
+        User.findOne({username: username}).then(function(user){
+            
+            if( !user ){
+                return done(null, false, { message: 'Usuario incorrecto.' });
+            }
+            if( !user.validPassword(password)){
+                return done(null, false, {message: 'Contraseña incorrecta'} );
+            }
+            return done(null, user);
+            
+        });
+    }
+  ));
