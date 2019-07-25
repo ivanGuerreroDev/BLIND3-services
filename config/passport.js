@@ -14,7 +14,6 @@ passport.use(new LocalStrategy(
         }).catch(done);
     }
 ));
-
 passport.use('app',new LocalStrategy(
     function(username, password, done) {
         User.findOne({username: username}).then(function(user){

@@ -9,14 +9,12 @@ var nodeMailer = require('nodemailer');
 const session = require('express-session');
 var errorhandler = require('errorhandler');
 const cors = require('cors');
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'), MongoStore = require('connect-mongo')(session);
 mongoose.set('useCreateIndex', true);
-if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI,{ useNewUrlParser: true });
-} else {
+
   mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', { useNewUrlParser: true });
   mongoose.set('debug', true);
-}
+
 require('./api/models/usuarios');
 require('./api/models/keys');
 
@@ -32,35 +30,34 @@ if (!isProduction) {
 //middleware
 
 // view engine setup
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(session(
-  {
-  secret: 'secret',
-  saveUninitialized: true,
-  resave: true
-}))
+
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session(
-  {
-  secret: 'secret',
-  saveUninitialized: true,
-  resave: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
-
-app.use(cors());
-app.options('*', cors());
+//app.use(cors());
+//app.options('*', cors());
 var indexRouter = require('./api/routes/index');
 app.use('/api', indexRouter);
+
+
+
+
+app.use(session({ 
+  secret: 'secret',
+  saveUninitialized: true,
+	resave: true,
+	store: new MongoStore({ mongooseConnection: mongoose.connection })
+}))
+app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport');
 
 
 // catch 404 and forward to error handler

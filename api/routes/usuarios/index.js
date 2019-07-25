@@ -8,6 +8,7 @@ var Key = mongoose.model('Keys');
 var passport = require('passport');
 const token = require('../../middlewares/token') ;
 
+
 router.post('/login', function(req, res, next){
   passport.authenticate('app', {
     session: false,
@@ -20,7 +21,6 @@ router.post('/login', function(req, res, next){
     return res.json({success : true, user: user.toAuthJSON()});
   })(req, res, next);
 });
-
 
 router.post('/accountCreation', function(req, res, next) { //create && //read
   if( !req.body.email && !req.body.username && !req.body.password && !req.body.autorizacion ) res.status(402).send({message:'Debe rellenar todos los campos',valid:false});
