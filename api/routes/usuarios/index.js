@@ -108,9 +108,8 @@ router.post('/permission', function(req, res, next){
         var now = new Date();
         if( !(now > user.exp) ){
           var msg = 'Codigo Reenviado!';
-          var valid = 0;
           sendCode(email, user.tokenReg);
-          res.send({message:msg,valid:valid});
+          res.send({message:msg,valid:false});
         }
       }
       var code = makeid(5);
@@ -123,8 +122,7 @@ router.post('/permission', function(req, res, next){
       key.save(function(err){
         if (err) errorhandler(err);
         var msg = 'Codigo enviado!';
-        var valid = 1;
-        res.send({message:msg,valid:valid});
+        res.send({message:msg,valid:true});
       })
       
     })
