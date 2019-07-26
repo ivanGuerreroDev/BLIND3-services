@@ -92,8 +92,8 @@ router.post('/newPass', function(req,res,next){
 })
 
 router.post('/permission', function(req, res, next){
-  if(!req.body.email)res.send({message:'correo no recibido',valid:false})
-  if(!req.body.type)res.send({message:'Error en el formulario',valid:false})
+  if(!req.body.email) {res.send({message:'correo no recibido',valid:false})}
+  else if(!req.body.type){ res.send({message:'Error en el formulario',valid:false})}
   var email = req.body.email;
   User.findOne({email: email},function(err,user){
     if (err) res.send({message:err, valid:false})
@@ -120,7 +120,7 @@ router.post('/permission', function(req, res, next){
       key.type = req.body.type;
       sendCode(email, code);
       key.save(function(err){
-        if (err) errorhandler(err);
+        if (err) console.log(err);
         var msg = 'Codigo enviado!';
         res.send({message:msg,valid:true});
       })
@@ -135,9 +135,9 @@ router.post('/allowing', function(req, res, next){
   var email = req.body.email;
   var now = new Date();
   Key.findOne({email: email, tokenReg: code, exp: {$lt: now}},function(err,key){
-    if(err) res.send({message:'error', valid:false})
-    if(!key) res.send({message:'Codigo no encontrado o expirado', valid:false})
-    res.send({resp:key._id, valid:true})
+    if(err){ res.send({message:'error', valid:false})}
+    else if(!key) {res.send({message:'Codigo no encontrado o expirado', valid:false})}
+    else {res.send({resp:key._id, valid:true})}
   })
 });
 
