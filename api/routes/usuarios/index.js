@@ -18,6 +18,7 @@ router.post('/login', function(req, res, next){
       return res.json({success : false, info: info, error: err}); 
     } 
     user.token = user.generateJWT();
+    req.logout();
     return res.json({success : true, user: user.toAuthJSON()});
   })(req, res, next);
 });
