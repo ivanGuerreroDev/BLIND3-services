@@ -22,6 +22,20 @@ router.post('/login', function(req, res, next){
   })(req, res, next);
 });
 
+router.post('/logout', function(req, res, next){
+  passport.authenticate('logoff', {
+    session: false,
+    badRequestMessage: 'Su sesion ya no existe, inicie sesion de nuevo'
+  }, function(err, user, info){
+    if(!user || err){ 
+      return res.json({success : false, info: info, error: err}); 
+    }
+    user.token = "";
+    user.updateOne();
+    return res.json({success : true, msg: "Ya ha cerrado sesion, volviendo a la pagina principal"});
+  })(req, res, next);
+});
+
 router.post('/accountCreation', function(req, res, next) { //create && //read
   if( !req.body.email && !req.body.username && !req.body.password && !req.body.autorizacion ) res.status(402).send({message:'Debe rellenar todos los campos',valid:false});
   var email = req.body.email;
@@ -92,9 +106,9 @@ router.post('/newPass', function(req,res,next){
 })
 
 router.post('/permission', function(req, res, next){
-  if(!req.body.email) {res.send({message:'correo no recibido',valid:false})}
+  var email = req.body.correo;
+  if(!email) {res.send({message:'correo no recibido',valid:false})}
   else if(!req.body.type){ res.send({message:'Error en el formulario',valid:false})}
-  var email = req.body.email;
   User.findOne({email: email},function(err,user){
     if (err) res.send({message:err, valid:false})
     if(user){

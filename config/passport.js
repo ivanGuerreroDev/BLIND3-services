@@ -29,3 +29,18 @@ passport.use('app',new LocalStrategy(
         });
     }
   ));
+  passport.use('logoff',new LocalStrategy(
+    function(username, token, done) {
+        User.findOne({username: username}).then(function(user){
+            
+            if( !user.token ){
+                return done(null, false, { message: 'Usuario no logeado.' });
+            }
+            if( !user ){
+                return done(null, false, {message: 'Usuario no logeado.'} );
+            }
+            return done(null, user);
+            
+        });
+    }
+  ));

@@ -4,7 +4,6 @@
         <title>Login page with jQuery and AJAX</title>
 
         <script src="jquery-3.2.1.min.js" type="text/javascript"></script>
-        <script src="checker.js" type="text/javascript"></script>
         <style>
           .container{max-width: 700px; margin:20px auto}
           .row{display:flex;}
@@ -85,7 +84,7 @@
                 var password = $("#txt_pass_registro").val().trim();
                 if( username != "" && password != "" && nombre != "" && correo != ""){
                   $.ajax({
-                      url:'https://localhost:3000/api/registro',
+                      url:'https://localhost:3000/api/accountCreation',
                       type:'post',
                       headers: {"Authorization": "clavesecreta"},
                       data:{nombre:nombre,correo:correo,username:username,password:password, autorizacion: autorizacion},
