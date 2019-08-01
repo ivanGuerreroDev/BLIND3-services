@@ -38,25 +38,32 @@ router.post('/logout', function(req, res, next){
 });
 
 router.post('/accountCreation', function(req, res, next) { //create && //read
-  if( !req.body.email && !req.body.username && !req.body.password && !req.body.autorizacion ) res.status(402).send({message:'Debe rellenar todos los campos',valid:false});
-  var email = req.body.email;
-  Key.findById(req.body.autorizacion,function(err,key){
-    if(err)res.send({message:'err',valid:false});
-    if(key){
-      key.deleteOne();
-      newUser = new User();
-      newUser.nombresyapellidos = req.body.nombres;
-      newUser.username = req.body.username;
-      newUser.email = email;
-      newUser.setPassword(req.body.password);
-      newUser.save(function (err2) {
-        if (err2) res.send({message:err2,valid:false});
-        res.send({message:'Account Created',valid:true});
-      })
-    }else{
-      res.status(402).send({message:'Email in use',valid:false});
-    }
-  })
+  if( !req.body.email && !req.body.username && !req.body.password && !req.body.autorizacion ) {
+    res.send({message:'Debe rellenar todos los campos',valid:false});
+  }else{
+    var email = req.body.email;
+    Key.findById(req.body.autorizacion,function(err,key){
+      if(err){ 
+        res.send({message:'err',valid:false}); 
+      }else if(key){
+        key.deleteOne();
+        newUser = new User();
+        newUser.nombresyapellidos = req.body.nombres;
+        newUser.username = req.body.username;
+        newUser.email = email;
+        newUser.setPassword(req.body.password);
+        newUser.save(function (err2) {
+          if(err2){
+            res.send({message:err2,valid:false});
+          }else{
+            res.send({message:'Account Created',valid:true});
+          }
+        })
+      }else{
+        res.send({message:'Email in use',valid:false});
+      }
+    })
+  }  
 });
 
 router.post('/newPass', function(req,res,next){
@@ -106,19 +113,23 @@ router.post('/newPass', function(req,res,next){
   })
 })
 
-router.post('/permission', function(req, res, next){
+router.post('/permission', async function(req, res, next){
   var email = req.body.correo;
-  if(!email) {res.send({message:'correo no recibido',valid:false})}
-  else if(!req.body.type){ res.send({message:'Error en el formulario',valid:false})}
-  User.findOne({email: email},function(err,user){
-    if (err) res.send({message:err, valid:false})
-    if(user){
-      var msg = 'Email ya registrado';
-      var valid = false;
-      res.send({message:msg,status:valid});
+  if(!email) {res.status(204).send({message:'correo no recibido',valid:false});}
+  else if(!req.body.type){ console.log('no 2'); res.status(204).send({message:'Error en el formulario',valid:false})
+  }
+  var usuario = await User.findOne({email: email},function(err,user){
+    if (err) {
+      res.status(204).send({message:err, valid:false})
     }
+  });
+  if(usuario){
+    var msg = 'Email ya registrado';
+    var valid = false;
+    res.send({message:msg,status:valid});
+  }else{
     Key.findOne({email: email},function (err, user) {
-      if (err) res.send({message:err, valid:false})
+      if (err) res.status(204).send({message:err, valid:false})
       if(user){
         var now = new Date();
         if( !(now > user.exp) ){
@@ -139,9 +150,9 @@ router.post('/permission', function(req, res, next){
         var msg = 'Codigo enviado!';
         res.send({message:msg,valid:true});
       })
-      
     })
-  }); 
+  }
+  
 });
 
 router.post('/allowing', function(req, res, next){
