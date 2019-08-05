@@ -6,8 +6,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('Usuarios');
 var Key = mongoose.model('Keys');
 var passport = require('passport');
-const token = require('../../middlewares/token') ;
-
+const token = require('../../middlewares/token');
 
 router.post('/login', function(req, res, next){
   passport.authenticate('app', {
@@ -111,7 +110,7 @@ router.post('/newPass', function(req,res,next){
       res.send({message:'Error en codigo de autorizacion',valid:true});
     }
   })
-})
+});
 
 router.post('/permission', async function(req, res, next){
   var email = req.body.correo;
@@ -202,7 +201,7 @@ function sendCode(email, code){
     if (error) return console.log(error);
     console.log('Message %s sent: %s', info.messageId, info.response);
   });
-}
+};
 module.exports = router;
 
 
