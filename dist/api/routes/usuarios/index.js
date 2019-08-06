@@ -109,7 +109,7 @@ router.post('/accountCreation', function (req, res, next) {
     });
   }
 });
-router.post('/newPass', function (req, res, next) {
+router.post('/recovery', function (req, res, next) {
   var email = req.body.email;
   var autorizacion = req.body.autorizacion;
   var password = req.body.password;
@@ -170,7 +170,7 @@ router.post('/newPass', function (req, res, next) {
     } else {
       res.send({
         message: 'Error en codigo de autorizacion',
-        valid: true
+        valid: false
       });
     }
   });
@@ -216,7 +216,7 @@ function () {
           case 4:
             usuario = _context.sent;
 
-            if (usuario) {
+            if (req.body.type == 'Creation' && usuario) {
               msg = 'Email ya registrado';
               valid = false;
               res.send({

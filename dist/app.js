@@ -1,10 +1,12 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _express = _interopRequireDefault(require("express"));
+
 var createError = require('http-errors');
 
 var isProduction = process.env.NODE_ENV === 'production';
-
-var express = require('express');
 
 var path = require('path');
 
@@ -37,7 +39,7 @@ require('./api/models/keys');
 
 var port = process.env.PORT || 3000;
 var isProduction = false;
-var app = express(); // connect to our database
+var app = (0, _express["default"])(); // connect to our database
 
 if (!isProduction) {
   app.use(errorhandler());
@@ -48,12 +50,12 @@ if (!isProduction) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));
-app.use(express.urlencoded({
+app.use(_express["default"].urlencoded({
   extended: true
 }));
-app.use(express.json());
+app.use(_express["default"].json());
 app.use(cookieParser());
-app.use(express["static"](path.join(__dirname, 'public')));
+app.use(_express["default"]["static"](path.join(__dirname, 'public')));
 app.use(cors());
 app.options('*', cors());
 
