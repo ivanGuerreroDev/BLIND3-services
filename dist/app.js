@@ -112,6 +112,36 @@ server.listen(process.env.PORT || 3000);
 server.on('error', onError);
 server.on('listening', onListening);
 /**
+ * socket.io
+ * 
+ */
+
+app.get('/', function (req, res) {
+  res.sendFile('chat.html');
+});
+
+var io = require('socket.io')(server);
+
+var connectedUsers = {};
+io.on('connection', function (socket) {
+  var newUser = socket.handshake.query.user;
+  connectedUsers[newUser] = socket;
+  console.log('the user ' + socket.handshake.query.user + ' connected'); //console.log(connectedUsers);
+
+  socket.on('private', function (msg) {
+    console.log(msg);
+    connectedUsers[msg.destiny].emit('private', {
+      from: msg.user,
+      msg: msg.msg
+    }); //console.log(destinySocket);
+  });
+  /*socket.on('chat message', function(msg){
+    console.log(msg);
+    io.emit('chat message', {user:socket.handshake.query.user, msg:msg.msg});
+   
+   });*/
+});
+/**
  * Normalize a port into a number, string, or false.
  */
 

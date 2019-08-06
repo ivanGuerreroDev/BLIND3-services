@@ -351,4 +351,5 @@ function sendCode(email, code) {
   });
 }
 
+;
 module.exports = router;
