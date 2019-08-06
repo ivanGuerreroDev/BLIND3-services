@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --exec babel-node src/app.js",
+    "start": "node index.js",
+    "start:dev": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir dist",
     "serve": "node dist/app.js"
   },
@@ -28,9 +29,7 @@
     "nodemailer": "^6.3.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "pug": "^2.0.4",
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0"
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
