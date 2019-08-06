@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/app.js",
     "start:dev": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir dist",
     "serve": "node dist/app.js"
