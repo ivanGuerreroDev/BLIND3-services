@@ -17,6 +17,7 @@ mongoose.set('useCreateIndex', true);
 
 require('./api/models/usuarios');
 require('./api/models/keys');
+require('./api/models/messages');
 
 var port = process.env.PORT || 3000;
 var isProduction = false;
@@ -129,10 +130,12 @@ io.on('connection', function(socket){
     console.log(msg);
     io.emit('chat message', {user:socket.handshake.query.user, msg:msg.msg});
 
-  
-
   });*/
 });
+
+/** 
+socket.io
+*/
 
 
 /**
