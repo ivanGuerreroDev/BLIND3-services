@@ -202,6 +202,5 @@ function sendCode(email, code){
     console.log('Message %s sent: %s', info.messageId, info.response);
   });
 };
+
 module.exports = router;
-
-

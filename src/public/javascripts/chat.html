@@ -5,26 +5,32 @@
   domain = 'http://localhost:3000';
   username = 'skandergod';
   to = 'danidacosta';
-  $(function () {
+  $(function(){
     var socket = io(domain,{
       query:{
         user:username
       }
     });
-    //socket.id = username;
     
-    $('form').submit(function(e){
+    /*$('form').submit(function(e){
       e.preventDefault(); // prevents page reloading
       console.log(socket.id);
       socket.emit('private', {user:username, destiny:to, msg:$('#m').val()});
       $('#m').val('');
       return false;
     });
+
     socket.on('private', function(res){
       console.log(res);
       $('#messages').append($('<li>').text(res.from));
       $('#messages').append($('<li>').text(res.msg));
     });
+
+    socket.on('welcome', function(res){
+      console.log(res.msg);
+      $('#messages').append($('<li>').text(res.msg));
+    });*/
+    
   });
 </script>
 <html>

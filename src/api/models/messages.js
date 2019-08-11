@@ -3,12 +3,14 @@ var uniqueValidator = require('mongoose-unique-validator');
 var User = mongoose.model('Usuarios');
 
 var messageSchema = new mongoose.Schema({
-    createdAt: new Date(),
     text: {type: String, required: true},
     user: {
-        username: String,
+        username: {type: String, required: true},
         avatar: String,
-    } 
+    },
+    to: {
+        username: {type: String, required: true},
+    },  
   }, {timestamps: true});
   
   messageSchema.methods.validUser = function(user) {

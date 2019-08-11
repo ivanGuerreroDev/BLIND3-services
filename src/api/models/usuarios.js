@@ -10,6 +10,7 @@ var UserSchema = new mongoose.Schema({
     nombresyapellidos: String,
     hash: String,
     salt: String,
+    token: String,
 }, {timestamps: true});
 
 
