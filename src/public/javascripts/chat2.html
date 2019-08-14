@@ -7,17 +7,17 @@
   username = 'danidacosta'
   to = 'skandergod';
   $(function () {
-    socket = io(domain,{
+    var socket = io(domain,{
       query:{
         user:username
       }
     });
     //socket.id = username;
-    
-  $(function(){
-    socket.emit('chat',{user:username, destiny:to, date:new Date()}) 
-  });
 
+    $(function(){
+    socket.emit('chat',{user:username, destiny:to, date:new Date()}) 
+    });
+  
     $('form').submit(function(e){
       e.preventDefault(); // prevents page reloading
       console.log(socket.id);
@@ -25,15 +25,22 @@
       $('#m').val('');
       return false;
     });
+
+    socket.on('Pre-load',function(res){
+      console.log(res.res[0].text);
+      $('#messages').append($('<li>').text(res.res[0].text));
+    });
+
     socket.on('private', function(res){
       console.log(res);
-      $('#messages').append($('<li>').text(res.from));
+      $('#messages').append($('<li>').text(res));
+      $('#messages').append($('<li>').text(res));
+    });
+
+    socket.on('welcome', function(res){
+      console.log(res.msg);
       $('#messages').append($('<li>').text(res.msg));
     });
-    socket.on('chat', function(res){
-      console.log(res);
-      $()
-    })
   });
 </script>
 <html>
