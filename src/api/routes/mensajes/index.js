@@ -1,14 +1,14 @@
-var connectedUsers = {};
+//var connectedUsers = {};
 var mongoose = require('mongoose');
 var Message = mongoose.model('Messages');
 var express = require('express');
 var router = express.Router();
 
-
-
 router.post('/chat', function(req, res, next){
 
-    io.on('connection', function(socket){
+    console.log("hola");
+
+    /*io.on('connection', function(socket){
 
         var newUser = socket.handshake.query.user;
         
@@ -27,7 +27,7 @@ router.post('/chat', function(req, res, next){
                 newMsg.to.username = req.destiny;
                 newMsg.save();
             });
-    });
+    });*/
 
 });
 

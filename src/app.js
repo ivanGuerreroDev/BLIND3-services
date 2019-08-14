@@ -46,9 +46,6 @@ app.options('*', cors());
 var indexRouter = require('./api/routes/index');
 app.use('/api', indexRouter);
 
-
-
-
 app.use(session({ 
   secret: 'secret',
   saveUninitialized: true,
@@ -89,9 +86,52 @@ app.set('port', port);
  * Create HTTP server.
  */
 
+/** 
+ * Socket IO
+ */
+
 var server = http.createServer(app);
 var io = require('socket.io')(server);
+var Message = mongoose.model('Messages');
+var connectedUsers = {};
 
+  io.on('connection', function(socket){
+
+    var newUser = socket.handshake.query.user;
+    
+    socket.emit('welcome', {msg: "You are now connected"});
+    console.log(socket.id);
+    connectedUsers[newUser] = socket;
+    console.log('the user '+ socket.handshake.query.user +' connected with id: '+socket.id);
+    
+        socket.on('chat', function(req){
+          console.log(req);
+          Message.find({  
+            $or: 
+            [{user:{username:req.user},to:{username:req.destiny},createdAt: {$lt:req.date}},
+            {user:{username:req.destiny},to:{username:req.user},createdAt: {$lt:req.date}}]
+            },function (err, res){
+              console.log(res);
+              socket.emit('Pre-load',{res});
+            })
+        });
+
+        socket.on('private', function(req){
+            console.log(req);
+            if(connectedUsers[req.destiny]){
+            connectedUsers[req.destiny].emit('private', {from:req.user, msg:req.msg}); 
+            }
+            var newMsg = new Message();
+            newMsg.text = req.msg;
+            newMsg.user.username = req.user;
+            newMsg.to.username = req.destiny;
+            newMsg.save();
+        });
+  });
+
+ /** 
+ * Socket IO
+ */
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -100,6 +140,7 @@ var io = require('socket.io')(server);
 server.listen(process.env.PORT || 3000);
 server.on('error', onError);
 server.on('listening', onListening);
+
 
 /**
  * Normalize a port into a number, string, or false.

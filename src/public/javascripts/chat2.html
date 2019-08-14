@@ -2,17 +2,22 @@
 <script src="socket.io.js"></script>
 <script src="jquery-3.2.1.min.js"></script>
 <script>
+  var socket;
   domain = 'http://localhost:3000'
   username = 'danidacosta'
   to = 'skandergod';
   $(function () {
-    var socket = io(domain,{
+    socket = io(domain,{
       query:{
         user:username
       }
     });
     //socket.id = username;
     
+  $(function(){
+    socket.emit('chat',{user:username, destiny:to, date:new Date()}) 
+  });
+
     $('form').submit(function(e){
       e.preventDefault(); // prevents page reloading
       console.log(socket.id);
@@ -25,7 +30,10 @@
       $('#messages').append($('<li>').text(res.from));
       $('#messages').append($('<li>').text(res.msg));
     });
-    
+    socket.on('chat', function(res){
+      console.log(res);
+      $()
+    })
   });
 </script>
 <html>
