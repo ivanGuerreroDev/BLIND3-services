@@ -30,7 +30,6 @@ router.post('/logout', function(req, res, next){
       return res.json({success : false, info: info, error: err}); 
     }
     user.token = "";
-    user.updateOne();
     req.logout();
     return res.json({success : true, msg: "Ya ha cerrado sesion, volviendo a la pagina principal"});
   })(req, res, next);

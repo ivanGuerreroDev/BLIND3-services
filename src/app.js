@@ -10,7 +10,10 @@ const session = require('express-session');
 var errorhandler = require('errorhandler');
 const cors = require('cors');
 var mongoose = require('mongoose'), MongoStore = require('connect-mongo')(session);
+var auth = require('./config/index');
 mongoose.set('useCreateIndex', true);
+const jwt  = require('jsonwebtoken');
+
 
   mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', { useNewUrlParser: true });
   mongoose.set('debug', true);
@@ -95,6 +98,40 @@ var io = require('socket.io')(server);
 var Message = mongoose.model('Messages');
 var connectedUsers = {};
 
+  io.use((socket, next) => {
+    //var tempSocket = jwt.verify(socket.request.headers.username,auth.secret);
+    var token = socket.handshake.query.Authorization;
+    if (token.startsWith('Bearer ')) {
+      // Remove Bearer from string
+      token = token.slice(7, token.length);   
+    }
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, auth.secret);
+        console.log(decoded);
+        if(decoded){
+          next();
+        }else{
+          socket.emit('Invalid Token', {
+            success: false,
+            message: 'Auth token is invalid'
+          });
+        }
+      }
+      catch(err) {
+        socket.emit('Invalid Token', {
+          success: false,
+          message: 'Auth token is invalid'
+        });
+      }
+    } else {
+      socket.emit('Invalid Token', {
+        success: false,
+        message: 'Auth token is not supplied'
+      });
+    }
+  });
+
   io.on('connection', function(socket){
 
     var newUser = socket.handshake.query.user;
@@ -108,8 +145,8 @@ var connectedUsers = {};
           console.log(req);
           Message.find({  
             $or: 
-            [{user:{username:req.user},to:{username:req.destiny},createdAt: {$lt:req.date}},
-            {user:{username:req.destiny},to:{username:req.user},createdAt: {$lt:req.date}}]
+            [{user:{username:req.user},createdAt: {$lt:req.date}},
+            {to:{username:req.user},createdAt: {$lt:req.date}}]
             },function (err, res){
               console.log(res);
               socket.emit('Pre-load',{res});

@@ -6,10 +6,12 @@
   domain = 'http://localhost:3000'
   username = 'danidacosta'
   to = 'skandergod';
+  token = '';
   $(function () {
     var socket = io(domain,{
       query:{
-        user:username
+        user:username,
+        Authorization: 'Bearer '+token
       }
     });
     //socket.id = username;
