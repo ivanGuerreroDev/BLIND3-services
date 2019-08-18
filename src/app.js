@@ -21,6 +21,7 @@ const jwt  = require('jsonwebtoken');
 require('./api/models/usuarios');
 require('./api/models/keys');
 require('./api/models/messages');
+require('./api/models/friendList');
 
 var port = process.env.PORT || 3000;
 var isProduction = false;

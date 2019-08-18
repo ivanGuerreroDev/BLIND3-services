@@ -1,34 +1,56 @@
-//var connectedUsers = {};
-var mongoose = require('mongoose');
-var Message = mongoose.model('Messages');
 var express = require('express');
 var router = express.Router();
+var token = require('../../middlewares/token');
+var mongoose = require('mongoose');
+var User = mongoose.model('Usuarios');
+var Friendlist = mongoose.model('Friendlist');
 
-router.post('/chat', function(req, res, next){
+router.post('/addFriend', /*token,*/ function(req, res, next){
 
-    console.log("hola");
-
-    /*io.on('connection', function(socket){
-
-        var newUser = socket.handshake.query.user;
-        
-        socket.emit('welcome', {msg: "You are now connected"});
-        console.log(socket.id);
-        connectedUsers[newUser] = socket;
-        console.log('the user '+ socket.handshake.query.user +' connected with id: '+socket.id);
-        
-
-            socket.on('private', function(req){
-                console.log(req);
-                connectedUsers[req.destiny].emit('private', {from:req.user, msg:req.msg}); 
-                var newMsg = new Message();
-                newMsg.text = req.msg;
-                newMsg.user.username = req.user;
-                newMsg.to.username = req.destiny;
-                newMsg.save();
-            });
-    });*/
+    User.findOne({email:req.body.email}, function(err,user){
+        if(err){
+            res.send({sucess:false, msg:'cannot find user with email'});
+        }else{
+            Friendlist.findOne({username:req.body.user}, function(err2,friendlist){
+                if(err2){
+                    res.send({sucess:false, msg:'request from invalid user'});
+                }else{
+                    friendlist.friends.push(user.username);
+                    friendlist.save();
+                    res.send({sucess:true, msg:'Friend Added!'});
+                }
+            });    
+        }
+    });
 
 });
+
+router.post('/removeFriend', /*token,*/ function(req, res, next){
+
+    User.findOne({username:req.body.target}, function(err,user){
+        if(err){
+            res.send({sucess:false, msg:'cannot find that user'});
+        }else{
+            Friendlist.findOne({username:req.body.user}, function(err2,friendlist){
+                if(err2){
+                    res.send({sucess:false, msg:'request from invalid user'});
+                }else{
+                    tempFriendlist = arrayRemove(friendlist.friends, user.username);
+                    friendlist.friends = tempFriendlist;
+                    friendlist.save();
+                    res.send({sucess:true, msg:'Friend Remove!'});
+                }
+            });    
+        }
+    });
+});
+
+function arrayRemove(arr, value) {
+
+    return arr.filter(function(ele){
+        return ele != value;
+    });
+ 
+ }
 
 module.exports = router;
