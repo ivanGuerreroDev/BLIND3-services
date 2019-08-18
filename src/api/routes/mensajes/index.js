@@ -22,7 +22,23 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
             });    
         }
     });
+});
 
+router.post('/friendList', /*token,*/ function(req, res, next){
+
+    User.findOne({username:req.body.user}, function(err,user){
+        if(err){
+            res.send({sucess:false, msg:'cannot find that user'});
+        }else{
+            Friendlist.findOne({username:user.username}, function(err2,friendlist){
+                if(err2){
+                    res.send({sucess:false, msg:'request from invalid user'});
+                }else{
+                    res.send({sucess:true, list:friendlist.friends});
+                }
+            });    
+        }
+    });
 });
 
 router.post('/removeFriend', /*token,*/ function(req, res, next){
