@@ -175,7 +175,9 @@ var connectedUsers = {};
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(process.env.PORT || 3000);
+server.listen(port, function() {
+  console.log("App is running on port " + port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
