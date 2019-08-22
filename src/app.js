@@ -150,7 +150,7 @@ var connectedUsers = {};
             {to:{username:req.user},createdAt: {$lt:req.date}}]
             },function (err, res){
               if(err){
-                socket.emit({sucess:true , msg:false});
+                socket.emit({sucess:false , msg:false});
               }else{
                 console.log(res);
                 socket.emit('Pre-load', {sucess:true , msg:res});
@@ -179,7 +179,9 @@ var connectedUsers = {};
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(process.env.PORT || 3000);
+server.listen(port, function() {
+  console.log("App is running on port " + port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
