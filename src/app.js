@@ -149,8 +149,12 @@ var connectedUsers = {};
             [{user:{username:req.user},createdAt: {$lt:req.date}},
             {to:{username:req.user},createdAt: {$lt:req.date}}]
             },function (err, res){
-              console.log(res);
-              socket.emit('Pre-load',{res});
+              if(err){
+                socket.emit({sucess:true , msg:false});
+              }else{
+                console.log(res);
+                socket.emit('Pre-load', {sucess:true , msg:res});
+              }
             })
         });
 
