@@ -161,7 +161,7 @@ var connectedUsers = {};
         socket.on('private', function(req){
             console.log(req);
             if(connectedUsers[req.destiny]){
-            connectedUsers[req.destiny].emit('private', {from:req.user, msg:req.msg}); 
+              io.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg}); 
             }
             var newMsg = new Message();
             newMsg.text = req.msg;
