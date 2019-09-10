@@ -98,6 +98,7 @@ var server = http.createServer(app);
 var io = require('socket.io')(server);
 var Message = mongoose.model('Messages');
 var connectedUsers = {};
+var resOnlineUsers = {};
 
   io.use((socket, next) => {
     //var tempSocket = jwt.verify(socket.request.headers.username,auth.secret);
@@ -139,7 +140,9 @@ var connectedUsers = {};
     
     socket.emit('welcome', {msg: "You are now connected"});
     console.log(socket.id);
-    connectedUsers[newUser] = socket;
+    connectedUsers[newUser] = socket.id;
+    resOnlineUsers[socket.id] = newUser;
+
     console.log('the user '+ socket.handshake.query.user +' connected with id: '+socket.id);
     
         socket.on('chat', function(req){
@@ -157,11 +160,11 @@ var connectedUsers = {};
               }
             })
         });
-
         socket.on('private', function(req){
             console.log(req);
             if(connectedUsers[req.destiny]){
-              io.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg}); 
+              socket.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg});
+            /* io.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg}) */ 
             }
             var newMsg = new Message();
             newMsg.text = req.msg;
@@ -169,6 +172,11 @@ var connectedUsers = {};
             newMsg.to.username = req.destiny;
             newMsg.save();
         });
+        socket.on('reconnect', function() {
+          connectedUsers[newUser] = socket.id;
+          resOnlineUsers[socket.id] = socket.handshake.query.id;
+        });
+
   });
 
  /** 
