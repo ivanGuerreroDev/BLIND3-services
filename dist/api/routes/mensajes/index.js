@@ -119,28 +119,28 @@ function (req, res, next) {
                 break;
               }
 
-              _context.next = 7;
+              console.log(req.body.username);
+              console.log(req.body.friend);
+              _context.next = 9;
               return Friendlist.findOne({
                 username: req.body.username
               });
 
-            case 7:
+            case 9:
               user1 = _context.sent;
-              console.log(user1);
               user1.friends.push({
                 username: req.body.friend
               });
               user1.save();
-              _context.next = 13;
+              _context.next = 14;
               return Friendlist.findOne({
                 username: req.body.friend
               });
 
-            case 13:
+            case 14:
               user2 = _context.sent;
-              console.log(user2);
               user2.friends.push({
-                username: req.body.friend
+                username: req.body.username
               });
               user2.save();
               rows.remove();
