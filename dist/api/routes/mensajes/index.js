@@ -28,6 +28,8 @@ function (req, res, next) {
       Friendlist.findOne({
         username: username
       }, function (err, row) {
+        console.log(row);
+
         if (row.friends != null) {
           if (!row.friends.find(function (friend) {
             return friend.username === user.username;

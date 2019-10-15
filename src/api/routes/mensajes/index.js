@@ -15,6 +15,7 @@ router.post('/findFriend', /*token,*/ function(req, res, next){
         if(err){ return res.send({sucess:false, msg:'No se encontro usuario'});
         }else{
             Friendlist.findOne({username: username}, function(err,row){
+                console.log(row)
                 if(row.friends != null){
                     if( !(row.friends.find(friend => friend.username === user.username)) ){
                         return res.send({success:true, user: user});
