@@ -128,7 +128,7 @@ function (req, res, next) {
         msg: 'Solicitud enviada'
       });
     } else {
-      newRequest = new FriendRequest();
+      var newRequest = new FriendRequest();
       newRequest.username = req.body.username;
       newRequest.request = req.body.request;
       newRequest.save(function (err2) {
