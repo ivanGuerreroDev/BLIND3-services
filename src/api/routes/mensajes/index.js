@@ -48,13 +48,13 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
         }else if(rows){
             Friendlist.findOne({username: req.body.username},function(err2,rows2){
                 if(err2){return res.send({success:false, msg:'Error'});}
-                friendlist.friends.push(req.body.friend);
-                friendlist.save();
+                rows2.friends.push(req.body.friend);
+                rows2.save();
             })
-            Friendlist.findOne({username: req.body.friend},function(err2,rows2){
+            Friendlist.findOne({username: req.body.friend},function(err2,rows3){
                 if(err2){return res.send({success:false, msg:'Error'});}
-                friendlist.friends.push(req.body.username);
-                friendlist.save();
+                rows3.friends.push(req.body.username);
+                rows3.save();
             })
             rows.remove();
             return  res.send({success:true, msg:'Amigo agregado!'});
