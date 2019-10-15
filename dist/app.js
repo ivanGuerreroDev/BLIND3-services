@@ -27,7 +27,12 @@ var cors = require('cors');
 var mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(session);
 
+var auth = require('./config/index');
+
 mongoose.set('useCreateIndex', true);
+
+var jwt = require('jsonwebtoken');
+
 mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', {
   useNewUrlParser: true
 });
@@ -36,6 +41,12 @@ mongoose.set('debug', true);
 require('./api/models/usuarios');
 
 require('./api/models/keys');
+
+require('./api/models/messages');
+
+require('./api/models/friendRequest');
+
+require('./api/models/friendList');
 
 var port = process.env.PORT || 3000;
 var isProduction = false;
@@ -103,47 +114,31 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(process.env.PORT || 3000);
+server.listen(port, function () {
+  console.log("App is running on port " + port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
-/**
- * socket.io
- * 
- */
 
-app.get('/', function (req, res) {
-  res.sendFile('chat.html');
+var socketIO = require('socket.io');
+
+var io = socketIO.listen(server, {
+  path: '/chat',
+  serveClient: false,
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
 });
 
-var io = require('socket.io')(server);
-
-var connectedUsers = {};
-io.on('connection', function (socket) {
-  var newUser = socket.handshake.query.user;
-  connectedUsers[newUser] = socket;
-  console.log('the user ' + socket.handshake.query.user + ' connected'); //console.log(connectedUsers);
-
-  socket.on('private', function (msg) {
-    console.log(msg);
-    connectedUsers[msg.destiny].emit('private', {
-      from: msg.user,
-      msg: msg.msg
-    }); //console.log(destinySocket);
-  });
-  /*socket.on('chat message', function(msg){
-    console.log(msg);
-    io.emit('chat message', {user:socket.handshake.query.user, msg:msg.msg});
-   
-   });*/
-});
+require("./api/routes/socket")(io);
 /**
  * Normalize a port into a number, string, or false.
  */
+
 
 function normalizePort(val) {
   var port = parseInt(val, 10);

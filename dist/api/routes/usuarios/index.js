@@ -18,6 +18,7 @@ var mongoose = require('mongoose');
 
 var User = mongoose.model('Usuarios');
 var Key = mongoose.model('Keys');
+var Friendlist = mongoose.model('Friendlist');
 
 var passport = require('passport');
 
@@ -57,7 +58,6 @@ router.post('/logout', function (req, res, next) {
     }
 
     user.token = "";
-    user.updateOne();
     req.logout();
     return res.json({
       success: true,
@@ -86,6 +86,9 @@ router.post('/accountCreation', function (req, res, next) {
         newUser.nombresyapellidos = req.body.nombres;
         newUser.username = req.body.username;
         newUser.email = email;
+        var Friendlist = new Friendlist();
+        Friendlist.username = newUser.username;
+        Friendlist.save();
         newUser.setPassword(req.body.password);
         newUser.save(function (err2) {
           if (err2) {

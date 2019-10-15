@@ -9,11 +9,12 @@ var FriendRequest = mongoose.model('FriendRequest');
 
 
 router.post('/findFriend', /*token,*/ function(req, res, next){
-    
-    User.findOne({email:req.body.email}, function(err,user){
+    var username = req.body.username;
+    var email = req.body.email;
+    User.findOne({email:email}, function(err,user){
         if(err){ return res.send({sucess:false, msg:'No se encontro usuario'});
         }else{
-            Friendlist.findOne({username: req.body.username}, function(err,row){
+            Friendlist.findOne({username: username}, function(err,row){
                 if( !(row.friends.find(friend => friend.username === user.username)) ){
                     return res.send({success:true, user: user});
                 }else{
