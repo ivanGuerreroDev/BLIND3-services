@@ -8,7 +8,7 @@ var FriendRequest = mongoose.model('FriendRequest');
 
 
 
-router.post('/findFriend', /*token,*/ function(req, res, next){
+router.post('/findFriend', function(req, res, next){
     var username = req.body.username;
     var email = req.body.email;
     User.findOne({email:email}, function(err,user){
@@ -30,10 +30,9 @@ router.post('/findFriend', /*token,*/ function(req, res, next){
     });
     
 });
-router.post('/friendRequests', /*token,*/ function(req, res, next){
-    console.log(req.body.username)
-    FriendRequest.findOne({request:req.body.username}, function(err,requests){
-        if(err){ return res.send({success:false, msg:'No se encontro usuario'});
+router.post('/friendRequests', function(req, res, next){
+    FriendRequest.find({request:req.body.username}, function(err,requests){
+        if(err){ console.log(err); return res.send({success:false, msg:'No se encontro usuario'});
         }else if(requests){
             return res.send({success:true, requests: requests});
         }else{
