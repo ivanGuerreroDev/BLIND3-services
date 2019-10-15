@@ -118,27 +118,27 @@ router.post('/recovery', function(req,res,next){
 
 router.post('/permission', async function(req, res, next){
   var email = req.body.correo;
-  if(!email) {res.status(204).send({message:'correo no recibido',valid:false});}
-  else if(!req.body.type){ console.log('no 2'); res.status(204).send({message:'Error en el formulario',valid:false})
+  if(!email) {return res.status(204).send({message:'correo no recibido',valid:false});}
+  else if(!req.body.type){ console.log('no 2'); return res.status(204).send({message:'Error en el formulario',valid:false})
   }
   var usuario = await User.findOne({email: email},function(err,user){
     if (err) {
-      res.status(204).send({message:err, valid:false})
+      return res.status(204).send({message:err, valid:false})
     }
   });
   if(req.body.type=='Creation' && usuario){
     var msg = 'Email ya registrado';
     var valid = false;
-    res.send({message:msg,status:valid});
+    return res.send({message:msg,status:valid});
   }else{
     Key.findOne({email: email},function (err, user) {
-      if (err) res.status(204).send({message:err, valid:false})
+      if (err) return res.status(204).send({message:err, valid:false})
       if(user){
         var now = new Date();
         if( !(now > user.exp) ){
           var msg = 'Codigo Reenviado!';
           sendCode(email, user.tokenReg);
-          res.send({message:msg,valid:false});
+          return res.send({message:msg,valid:false});
         }
       }
       var code = makeid(5);
@@ -151,7 +151,7 @@ router.post('/permission', async function(req, res, next){
       key.save(function(err){
         if (err) console.log(err);
         var msg = 'Codigo enviado!';
-        res.send({message:msg,valid:true});
+        return res.send({message:msg,valid:true});
       })
     })
   }

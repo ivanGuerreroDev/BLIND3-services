@@ -192,82 +192,96 @@ function () {
           case 0:
             email = req.body.correo;
 
-            if (!email) {
-              res.status(204).send({
-                message: 'correo no recibido',
-                valid: false
-              });
-            } else if (!req.body.type) {
-              console.log('no 2');
-              res.status(204).send({
-                message: 'Error en el formulario',
-                valid: false
-              });
+            if (email) {
+              _context.next = 5;
+              break;
             }
 
-            _context.next = 4;
+            return _context.abrupt("return", res.status(204).send({
+              message: 'correo no recibido',
+              valid: false
+            }));
+
+          case 5:
+            if (req.body.type) {
+              _context.next = 8;
+              break;
+            }
+
+            console.log('no 2');
+            return _context.abrupt("return", res.status(204).send({
+              message: 'Error en el formulario',
+              valid: false
+            }));
+
+          case 8:
+            _context.next = 10;
             return User.findOne({
               email: email
             }, function (err, user) {
               if (err) {
-                res.status(204).send({
+                return res.status(204).send({
                   message: err,
                   valid: false
                 });
               }
             });
 
-          case 4:
+          case 10:
             usuario = _context.sent;
 
-            if (req.body.type == 'Creation' && usuario) {
-              msg = 'Email ya registrado';
-              valid = false;
-              res.send({
-                message: msg,
-                status: valid
-              });
-            } else {
-              Key.findOne({
-                email: email
-              }, function (err, user) {
-                if (err) res.status(204).send({
-                  message: err,
-                  valid: false
-                });
-
-                if (user) {
-                  var now = new Date();
-
-                  if (!(now > user.exp)) {
-                    var msg = 'Codigo Reenviado!';
-                    sendCode(email, user.tokenReg);
-                    res.send({
-                      message: msg,
-                      valid: false
-                    });
-                  }
-                }
-
-                var code = makeid(5);
-                var key = new Key();
-                key.email = email;
-                key.tokenReg = code;
-                key.generateExpDate();
-                key.type = req.body.type;
-                sendCode(email, code);
-                key.save(function (err) {
-                  if (err) console.log(err);
-                  var msg = 'Codigo enviado!';
-                  res.send({
-                    message: msg,
-                    valid: true
-                  });
-                });
-              });
+            if (!(req.body.type == 'Creation' && usuario)) {
+              _context.next = 17;
+              break;
             }
 
-          case 6:
+            msg = 'Email ya registrado';
+            valid = false;
+            return _context.abrupt("return", res.send({
+              message: msg,
+              status: valid
+            }));
+
+          case 17:
+            Key.findOne({
+              email: email
+            }, function (err, user) {
+              if (err) return res.status(204).send({
+                message: err,
+                valid: false
+              });
+
+              if (user) {
+                var now = new Date();
+
+                if (!(now > user.exp)) {
+                  var msg = 'Codigo Reenviado!';
+                  sendCode(email, user.tokenReg);
+                  return res.send({
+                    message: msg,
+                    valid: false
+                  });
+                }
+              }
+
+              var code = makeid(5);
+              var key = new Key();
+              key.email = email;
+              key.tokenReg = code;
+              key.generateExpDate();
+              key.type = req.body.type;
+              sendCode(email, code);
+              key.save(function (err) {
+                if (err) console.log(err);
+                var msg = 'Codigo enviado!';
+                return res.send({
+                  message: msg,
+                  valid: true
+                });
+              });
+            });
+
+          case 18:
           case "end":
             return _context.stop();
         }
