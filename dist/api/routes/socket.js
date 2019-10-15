@@ -4,10 +4,6 @@
 var mongoose = require('mongoose');
 
 var User = mongoose.model('Usuarios');
-var server = http.createServer(app);
-
-var io = require('socket.io')(server);
-
 var Message = mongoose.model('Messages');
 var connectedUsers = {};
 var resOnlineUsers = {};
