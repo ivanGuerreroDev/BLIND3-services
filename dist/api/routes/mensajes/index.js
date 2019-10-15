@@ -71,10 +71,15 @@ function (req, res, next) {
         success: false,
         msg: 'No se encontro usuario'
       });
-    } else {
+    } else if (requests) {
       return res.send({
         success: true,
         requests: requests
+      });
+    } else {
+      return res.send({
+        success: false,
+        msg: 'No se encontro usuario'
       });
     }
   });
