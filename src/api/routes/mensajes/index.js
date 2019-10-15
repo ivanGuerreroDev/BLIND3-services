@@ -15,10 +15,14 @@ router.post('/findFriend', /*token,*/ function(req, res, next){
         if(err){ return res.send({sucess:false, msg:'No se encontro usuario'});
         }else{
             Friendlist.findOne({username: username}, function(err,row){
-                if( !(row.friends.find(friend => friend.username === user.username)) ){
-                    return res.send({success:true, user: user});
+                if(row.friends != null){
+                    if( !(row.friends.find(friend => friend.username === user.username)) ){
+                        return res.send({success:true, user: user});
+                    }else{
+                        return res.send({success:false, msg: 'Usuario ya esta en tu lista de amigos'});
+                    }
                 }else{
-                    return res.send({success:false, msg: 'Usuario ya esta en tu lista de amigos'});
+                    return res.send({success:true, user: user});
                 }
             })
         }
