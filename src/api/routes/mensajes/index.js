@@ -31,9 +31,7 @@ router.post('/findFriend', /*token,*/ function(req, res, next){
     
 });
 router.post('/friendRequests', /*token,*/ function(req, res, next){
-    var username = req.body.username;
-    console.log(username)
-    FriendRequest.findOne({request:username}, function(err,requests){
+    FriendRequest.findOne({request:req.body.username}, function(err,requests){
         if(err){ return res.send({success:false, msg:'No se encontro usuario'});
         }else if(requests){
             return res.send({success:true, requests: requests});

@@ -62,10 +62,8 @@ function (req, res, next) {
 router.post('/friendRequests',
 /*token,*/
 function (req, res, next) {
-  var username = req.body.username;
-  console.log(username);
   FriendRequest.findOne({
-    request: username
+    request: req.body.username
   }, function (err, requests) {
     if (err) {
       return res.send({
