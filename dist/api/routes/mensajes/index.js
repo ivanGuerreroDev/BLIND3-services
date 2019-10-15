@@ -28,9 +28,14 @@ function (req, res, next) {
       Friendlist.findOne({
         username: username
       }, function (err, row) {
-        console.log(row);
+        if (err) {
+          return res.send({
+            success: true,
+            user: user
+          });
+        }
 
-        if (row.friends != null) {
+        if (row != null) {
           if (!row.friends.find(function (friend) {
             return friend.username === user.username;
           })) {
@@ -44,11 +49,6 @@ function (req, res, next) {
               msg: 'Usuario ya esta en tu lista de amigos'
             });
           }
-        } else {
-          return res.send({
-            success: true,
-            user: user
-          });
         }
       });
     }
