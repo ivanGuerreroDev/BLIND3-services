@@ -158,7 +158,7 @@ function (req, res, next) {
         sucess: false,
         msg: 'No se encontro usuario'
       });
-    } else {
+    } else if (user) {
       Friendlist.findOne({
         username: user.username
       }, function (err2, friendlist) {
@@ -173,6 +173,11 @@ function (req, res, next) {
             list: friendlist.friends
           });
         }
+      });
+    } else {
+      res.send({
+        sucess: false,
+        msg: 'No se encontro usuario'
       });
     }
   });

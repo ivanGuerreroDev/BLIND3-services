@@ -80,7 +80,7 @@ router.post('/friendList', /*token,*/ function(req, res, next){
     User.findOne({username:req.body.username}, function(err,user){
         if(err){
             return res.send({sucess:false, msg:'No se encontro usuario'});
-        }else{
+        }else if(user){
             Friendlist.findOne({username:user.username}, function(err2,friendlist){
                 if(err2){
                     return res.send({sucess:false, msg:'Solicitud invalida'});
@@ -88,7 +88,7 @@ router.post('/friendList', /*token,*/ function(req, res, next){
                     return res.send({sucess:true, list:friendlist.friends});
                 }
             });    
-        }
+        }else{res.send({sucess:false, msg:'No se encontro usuario'});}
     });
 });
 
