@@ -87,9 +87,9 @@ router.post('/accountCreation', function (req, res, next) {
         newUser.nombresyapellidos = req.body.nombres;
         newUser.username = req.body.username;
         newUser.email = email;
-        var Friendlist = new Friendlist();
-        Friendlist.username = newUser.username;
-        Friendlist.save();
+        var friendlist = new Friendlist();
+        friendlist.username = newUser.username;
+        friendlist.save();
         newUser.setPassword(req.body.password);
         newUser.save(function (err2) {
           if (err2) {
