@@ -83,7 +83,7 @@ router.post('/accountCreation', function (req, res, next) {
         });
       } else if (key) {
         key.deleteOne();
-        newUser = new User();
+        var newUser = new User();
         newUser.nombresyapellidos = req.body.nombres;
         newUser.username = req.body.username;
         newUser.email = email;
