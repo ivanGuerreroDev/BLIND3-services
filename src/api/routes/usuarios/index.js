@@ -192,12 +192,12 @@ function sendCode(email, code){
     port: 465,
     secure: true,
     auth: {
-      user: 'noreplybusient@gmail.com',
-      pass: 'BuSiNeT1'
+      user: 'ivan.guerrero@businet-web.com',
+      pass: 'rogue195:)'
     }
   });
   let mailOptions = {
-    from: '"Businet" <noreplybusient@gmail.com>', // sender address
+    from: '"Businet" <ivan.guerrero@businet-web.com>', // sender address
     to: email, // list of receivers
     subject: "Verification Code from Businet", // Subject line
     text: "Verification Code", // plain text body
