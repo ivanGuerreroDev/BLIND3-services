@@ -347,12 +347,12 @@ function sendCode(email, code) {
     port: 465,
     secure: true,
     auth: {
-      user: 'noreplybusient@gmail.com',
-      pass: 'BuSiNeT1'
+      user: 'ivan.guerrero@businet-web.com',
+      pass: 'rogue195:)'
     }
   });
   var mailOptions = {
-    from: '"Businet" <noreplybusient@gmail.com>',
+    from: '"Businet" <ivan.guerrero@businet-web.com>',
     // sender address
     to: email,
     // list of receivers
