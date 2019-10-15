@@ -21,6 +21,7 @@ const jwt  = require('jsonwebtoken');
 require('./api/models/usuarios');
 require('./api/models/keys');
 require('./api/models/messages');
+require('./api/models/friendRequest');
 require('./api/models/friendList');
 
 var port = process.env.PORT || 3000;
@@ -90,98 +91,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-/** 
- * Socket IO
- */
 
-var server = http.createServer(app);
-var io = require('socket.io')(server);
-var Message = mongoose.model('Messages');
-var connectedUsers = {};
-var resOnlineUsers = {};
-
-  io.use((socket, next) => {
-    //var tempSocket = jwt.verify(socket.request.headers.username,auth.secret);
-    var token = socket.handshake.query.Authorization;
-    if (token.startsWith('Bearer ')) {
-      // Remove Bearer from string
-      token = token.slice(7, token.length);   
-    }
-    if (token) {
-      try {
-        const decoded = jwt.verify(token, auth.secret);
-        console.log(decoded);
-        if(decoded){
-          next();
-        }else{
-          socket.emit('Invalid Token', {
-            success: false,
-            message: 'Auth token is invalid'
-          });
-        }
-      }
-      catch(err) {
-        socket.emit('Invalid Token', {
-          success: false,
-          message: 'Auth token is invalid'
-        });
-      }
-    } else {
-      socket.emit('Invalid Token', {
-        success: false,
-        message: 'Auth token is not supplied'
-      });
-    }
-  });
-
-  io.on('connection', function(socket){
-
-    var newUser = socket.handshake.query.user;
-    
-    socket.emit('welcome', {msg: "You are now connected"});
-    console.log(socket.id);
-    connectedUsers[newUser] = socket.id;
-    resOnlineUsers[socket.id] = newUser;
-
-    console.log('the user '+ socket.handshake.query.user +' connected with id: '+socket.id);
-    
-        socket.on('chat', function(req){
-          console.log(req);
-          Message.find({  
-            $or: 
-            [{user:{username:req.user},createdAt: {$lt:req.date}},
-            {to:{username:req.user},createdAt: {$lt:req.date}}]
-            },function (err, res){
-              if(err){
-                socket.emit({sucess:false , msg:false});
-              }else{
-                console.log(res);
-                socket.emit('Pre-load', {sucess:true , msg:res});
-              }
-            })
-        });
-        socket.on('private', function(req){
-            console.log(req);
-            if(connectedUsers[req.destiny]){
-              socket.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg});
-            /* io.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg}) */ 
-            }
-            var newMsg = new Message();
-            newMsg.text = req.msg;
-            newMsg.user.username = req.user;
-            newMsg.to.username = req.destiny;
-            newMsg.save();
-        });
-        socket.on('reconnect', function() {
-          connectedUsers[newUser] = socket.id;
-          resOnlineUsers[socket.id] = socket.handshake.query.id;
-        });
-
-  });
-
- /** 
- * Socket IO
- */
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -193,6 +103,15 @@ server.listen(port, function() {
 server.on('error', onError);
 server.on('listening', onListening);
 
+var socketIO = require('socket.io')
+const io = socketIO.listen(server, {
+  path: '/chat',
+  serveClient: false,  
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
+});
+require("./api/routes/socket")(io);
 
 /**
  * Normalize a port into a number, string, or false.

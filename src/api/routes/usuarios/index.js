@@ -172,6 +172,8 @@ router.post('/allowing', function(req, res, next){
 
 
 
+
+
 function makeid(length) {
   console.log('ejecutado makeid')
   var result           = '';
