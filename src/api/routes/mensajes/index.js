@@ -41,20 +41,18 @@ router.post('/friendRequests', function(req, res, next){
     });
 });
 router.post('/addFriend', /*token,*/ function(req, res, next){
-    FriendRequest.findOne({username:req.body.friend, request: req.body.username}, function(err,rows){
+    FriendRequest.findOne({username:req.body.friend, request: req.body.username}, async function(err,rows){
         if(err){
             return res.send({success:false, msg:'Error'});
         }else if(rows){
-            Friendlist.findOne({username: req.body.username},function(err2,rows2){
-                if(err2){return res.send({success:false, msg:'Error'});}
-                rows2.friends.push({username: req.body.friend});
-                rows2.save();
-            })
-            Friendlist.findOne({username: req.body.friend},function(err2,rows3){
-                if(err2){return res.send({success:false, msg:'Error'});}
-                rows3.friends.push({username: req.body.friend});
-                rows3.save();
-            })
+            var user1 = await Friendlist.findOne({username: req.body.username})
+            console.log(user1)
+            user1.friends.push({username: req.body.friend});
+            user1.save();
+            var user2= await Friendlist.findOne({username: req.body.friend})
+            console.log(user2)
+            user2.friends.push({username: req.body.friend});
+            user2.save();
             rows.remove();
             return  res.send({success:true, msg:'Amigo agregado!'});
         }else{

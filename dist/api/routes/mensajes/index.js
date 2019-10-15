@@ -1,5 +1,11 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
 var express = require('express');
 
 var router = express.Router();
@@ -86,55 +92,81 @@ function (req, res, next) {
   FriendRequest.findOne({
     username: req.body.friend,
     request: req.body.username
-  }, function (err, rows) {
-    if (err) {
-      return res.send({
-        success: false,
-        msg: 'Error'
-      });
-    } else if (rows) {
-      Friendlist.findOne({
-        username: req.body.username
-      }, function (err2, rows2) {
-        if (err2) {
-          return res.send({
-            success: false,
-            msg: 'Error'
-          });
-        }
+  },
+  /*#__PURE__*/
+  function () {
+    var _ref = (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee(err, rows) {
+      var user1, user2;
+      return _regenerator["default"].wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!err) {
+                _context.next = 4;
+                break;
+              }
 
-        rows2.friends.push({
-          username: req.body.friend
-        });
-        rows2.save();
-      });
-      Friendlist.findOne({
-        username: req.body.friend
-      }, function (err2, rows3) {
-        if (err2) {
-          return res.send({
-            success: false,
-            msg: 'Error'
-          });
-        }
+              return _context.abrupt("return", res.send({
+                success: false,
+                msg: 'Error'
+              }));
 
-        rows3.friends.push({
-          username: req.body.friend
-        });
-        rows3.save();
-      });
-      rows.remove();
-      return res.send({
-        success: true,
-        msg: 'Amigo agregado!'
-      });
-    } else {
-      return res.send({
-        success: false,
-        msg: 'Error'
-      });
-    }
-  });
+            case 4:
+              if (!rows) {
+                _context.next = 21;
+                break;
+              }
+
+              _context.next = 7;
+              return Friendlist.findOne({
+                username: req.body.username
+              });
+
+            case 7:
+              user1 = _context.sent;
+              console.log(user1);
+              user1.friends.push({
+                username: req.body.friend
+              });
+              user1.save();
+              _context.next = 13;
+              return Friendlist.findOne({
+                username: req.body.friend
+              });
+
+            case 13:
+              user2 = _context.sent;
+              console.log(user2);
+              user2.friends.push({
+                username: req.body.friend
+              });
+              user2.save();
+              rows.remove();
+              return _context.abrupt("return", res.send({
+                success: true,
+                msg: 'Amigo agregado!'
+              }));
+
+            case 21:
+              return _context.abrupt("return", res.send({
+                success: false,
+                msg: 'Error'
+              }));
+
+            case 22:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x, _x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
 });
 router.post('/denyFriend',
 /*token,*/
