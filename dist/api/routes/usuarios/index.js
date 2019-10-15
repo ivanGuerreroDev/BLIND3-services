@@ -343,7 +343,7 @@ function makeid(length) {
 function sendCode(email, code) {
   console.log('ejecutado sendCode');
   var transporter = nodeMailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'mail.businet-web.com',
     port: 465,
     secure: true,
     auth: {

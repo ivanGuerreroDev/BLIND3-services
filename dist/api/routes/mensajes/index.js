@@ -103,7 +103,9 @@ function (req, res, next) {
           });
         }
 
-        rows2.friends.push(req.body.friend);
+        rows2.friends.push({
+          username: req.body.friend
+        });
         rows2.save();
       });
       Friendlist.findOne({
@@ -116,7 +118,9 @@ function (req, res, next) {
           });
         }
 
-        rows3.friends.push(req.body.username);
+        rows3.friends.push({
+          username: req.body.friend
+        });
         rows3.save();
       });
       rows.remove();
