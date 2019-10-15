@@ -117,8 +117,7 @@ router.post('/recovery', function(req,res,next){
 });
 
 router.post('/permission', async function(req, res, next){
-  var email = req.body.correo;
-  console.log(req.body)
+  var email = req.body.email;
   if(!email) {return res.send({message:'correo no recibido',valid:false});}
   else if(!req.body.type){ console.log('no 2'); return res.send({message:'Error en el formulario',valid:false})
   }

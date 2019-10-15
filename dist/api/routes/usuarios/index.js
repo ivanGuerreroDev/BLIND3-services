@@ -190,11 +190,10 @@ function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            email = req.body.correo;
-            console.log(req.body);
+            email = req.body.email;
 
             if (email) {
-              _context.next = 6;
+              _context.next = 5;
               break;
             }
 
@@ -203,9 +202,9 @@ function () {
               valid: false
             }));
 
-          case 6:
+          case 5:
             if (req.body.type) {
-              _context.next = 9;
+              _context.next = 8;
               break;
             }
 
@@ -215,8 +214,8 @@ function () {
               valid: false
             }));
 
-          case 9:
-            _context.next = 11;
+          case 8:
+            _context.next = 10;
             return User.findOne({
               email: email
             }, function (err, user) {
@@ -228,11 +227,11 @@ function () {
               }
             });
 
-          case 11:
+          case 10:
             usuario = _context.sent;
 
             if (!(req.body.type == 'Creation' && usuario)) {
-              _context.next = 18;
+              _context.next = 17;
               break;
             }
 
@@ -243,7 +242,7 @@ function () {
               status: valid
             }));
 
-          case 18:
+          case 17:
             Key.findOne({
               email: email
             }, function (err, user) {
@@ -282,7 +281,7 @@ function () {
               });
             });
 
-          case 19:
+          case 18:
           case "end":
             return _context.stop();
         }
