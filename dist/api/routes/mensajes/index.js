@@ -49,6 +49,11 @@ function (req, res, next) {
               msg: 'Usuario ya esta en tu lista de amigos'
             });
           }
+        } else {
+          return res.send({
+            success: true,
+            user: user
+          });
         }
       });
     }

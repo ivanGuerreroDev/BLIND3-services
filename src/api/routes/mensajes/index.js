@@ -22,6 +22,8 @@ router.post('/findFriend', /*token,*/ function(req, res, next){
                     }else{
                         return res.send({success:false, msg: 'Usuario ya esta en tu lista de amigos'});
                     }
+                }else{
+                    return res.send({success:true, user: user});
                 }
             })
         }
