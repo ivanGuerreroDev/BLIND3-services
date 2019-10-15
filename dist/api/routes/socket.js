@@ -34,13 +34,13 @@ module.exports = function (io) {
       }, function (err, res) {
         if (err) {
           socket.emit({
-            sucess: false,
+            success: false,
             msg: false
           });
         } else {
           console.log(res);
           socket.emit('Pre-load', {
-            sucess: true,
+            success: true,
             msg: res
           });
         }

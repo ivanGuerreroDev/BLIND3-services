@@ -21,10 +21,10 @@ module.exports = function(io) {
         {to:{username:req.user},createdAt: {$lt:req.date}}]
         },function (err, res){
           if(err){
-            socket.emit({sucess:false , msg:false});
+            socket.emit({success:false , msg:false});
           }else{
             console.log(res);
-            socket.emit('Pre-load', {sucess:true , msg:res});
+            socket.emit('Pre-load', {success:true , msg:res});
           }
         })
     });

@@ -21,7 +21,7 @@ function (req, res, next) {
   }, function (err, user) {
     if (err) {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'No se encontro usuario'
       });
     } else {
@@ -68,7 +68,7 @@ function (req, res, next) {
   }, function (err, rows) {
     if (err) {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'Error'
       });
     } else if (rows.length) {
@@ -77,7 +77,7 @@ function (req, res, next) {
       }, function (err2, rows2) {
         if (err2) {
           return res.send({
-            sucess: false,
+            success: false,
             msg: 'Error'
           });
         }
@@ -90,7 +90,7 @@ function (req, res, next) {
       }, function (err2, rows2) {
         if (err2) {
           return res.send({
-            sucess: false,
+            success: false,
             msg: 'Error'
           });
         }
@@ -99,12 +99,12 @@ function (req, res, next) {
         friendlist.save();
       });
       return res.send({
-        sucess: true,
+        success: true,
         msg: 'Amigo agregado!'
       });
     } else {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'Error'
       });
     }
@@ -119,12 +119,12 @@ function (req, res, next) {
   }, function (err, rows) {
     if (err) {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'Error'
       });
     } else if (rows) {
       return res.send({
-        sucess: true,
+        success: true,
         msg: 'Solicitud enviada'
       });
     } else {
@@ -139,7 +139,7 @@ function (req, res, next) {
           });
         } else {
           return res.send({
-            sucess: true,
+            success: true,
             msg: 'Solicitud enviada'
           });
         }
@@ -155,7 +155,7 @@ function (req, res, next) {
   }, function (err, user) {
     if (err) {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'No se encontro usuario'
       });
     } else if (user) {
@@ -164,19 +164,19 @@ function (req, res, next) {
       }, function (err2, friendlist) {
         if (err2) {
           return res.send({
-            sucess: false,
+            success: false,
             msg: 'Solicitud invalida'
           });
         } else {
           return res.send({
-            sucess: true,
+            success: true,
             list: friendlist.friends
           });
         }
       });
     } else {
       res.send({
-        sucess: false,
+        success: false,
         msg: 'No se encontro usuario'
       });
     }
@@ -190,7 +190,7 @@ function (req, res, next) {
   }, function (err, user) {
     if (err) {
       return res.send({
-        sucess: false,
+        success: false,
         msg: 'No se encontró usuario'
       });
     } else {
@@ -199,7 +199,7 @@ function (req, res, next) {
       }, function (err2, friendlist) {
         if (err2) {
           return res.send({
-            sucess: false,
+            success: false,
             msg: 'Solicitud invalida'
           });
         } else {
@@ -207,7 +207,7 @@ function (req, res, next) {
           friendlist.friends = tempFriendlist;
           friendlist.save();
           return res.send({
-            sucess: true,
+            success: true,
             msg: 'Eliminado!'
           });
         }
