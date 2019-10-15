@@ -191,47 +191,48 @@ function () {
         switch (_context.prev = _context.next) {
           case 0:
             email = req.body.correo;
+            console.log(req.body);
 
             if (email) {
-              _context.next = 5;
+              _context.next = 6;
               break;
             }
 
-            return _context.abrupt("return", res.status(204).send({
+            return _context.abrupt("return", res.send({
               message: 'correo no recibido',
               valid: false
             }));
 
-          case 5:
+          case 6:
             if (req.body.type) {
-              _context.next = 8;
+              _context.next = 9;
               break;
             }
 
             console.log('no 2');
-            return _context.abrupt("return", res.status(204).send({
+            return _context.abrupt("return", res.send({
               message: 'Error en el formulario',
               valid: false
             }));
 
-          case 8:
-            _context.next = 10;
+          case 9:
+            _context.next = 11;
             return User.findOne({
               email: email
             }, function (err, user) {
               if (err) {
-                return res.status(204).send({
+                return res.send({
                   message: err,
                   valid: false
                 });
               }
             });
 
-          case 10:
+          case 11:
             usuario = _context.sent;
 
             if (!(req.body.type == 'Creation' && usuario)) {
-              _context.next = 17;
+              _context.next = 18;
               break;
             }
 
@@ -242,11 +243,11 @@ function () {
               status: valid
             }));
 
-          case 17:
+          case 18:
             Key.findOne({
               email: email
             }, function (err, user) {
-              if (err) return res.status(204).send({
+              if (err) return res.send({
                 message: err,
                 valid: false
               });
@@ -281,7 +282,7 @@ function () {
               });
             });
 
-          case 18:
+          case 19:
           case "end":
             return _context.stop();
         }
