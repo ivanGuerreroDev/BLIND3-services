@@ -213,10 +213,14 @@ function (req, res, next) {
             success: false,
             msg: 'Solicitud invalida'
           });
-        } else {
+        } else if (friendlist) {
           return res.send({
             success: true,
             list: friendlist.friends
+          });
+        } else {
+          return res.send({
+            success: true
           });
         }
       });

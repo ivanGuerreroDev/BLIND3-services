@@ -106,8 +106,10 @@ router.post('/friendList', /*token,*/ function(req, res, next){
             Friendlist.findOne({username:user.username}, function(err2,friendlist){
                 if(err2){
                     return res.send({success:false, msg:'Solicitud invalida'});
-                }else{
+                }else if(friendlist){
                     return res.send({success:true, list:friendlist.friends});
+                }else{
+                    return res.send({success:true})
                 }
             });    
         }else{res.send({success:false, msg:'No se encontro usuario'});}
