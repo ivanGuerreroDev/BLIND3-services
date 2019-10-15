@@ -92,7 +92,7 @@ function (req, res, next) {
         success: false,
         msg: 'Error'
       });
-    } else if (rows.length) {
+    } else if (rows) {
       Friendlist.findOne({
         username: req.body.username
       }, function (err2, rows2) {
@@ -119,6 +119,7 @@ function (req, res, next) {
         friendlist.friends.push(req.body.username);
         friendlist.save();
       });
+      rows.remove();
       return res.send({
         success: true,
         msg: 'Amigo agregado!'
