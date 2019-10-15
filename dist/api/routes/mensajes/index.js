@@ -59,6 +59,26 @@ function (req, res, next) {
     }
   });
 });
+router.post('/friendRequests',
+/*token,*/
+function (req, res, next) {
+  var username = req.body.username;
+  FriendRequest.findOne({
+    request: username
+  }, function (err, requests) {
+    if (err) {
+      return res.send({
+        success: false,
+        msg: 'No se encontro usuario'
+      });
+    } else {
+      return res.send({
+        success: true,
+        requests: requests
+      });
+    }
+  });
+});
 router.post('/addFriend',
 /*token,*/
 function (req, res, next) {
@@ -101,6 +121,32 @@ function (req, res, next) {
       return res.send({
         success: true,
         msg: 'Amigo agregado!'
+      });
+    } else {
+      return res.send({
+        success: false,
+        msg: 'Error'
+      });
+    }
+  });
+});
+router.post('/denyFriend',
+/*token,*/
+function (req, res, next) {
+  FriendRequest.findOne({
+    username: req.body.friend,
+    request: req.body.username
+  }, function (err, rows) {
+    if (err) {
+      return res.send({
+        success: false,
+        msg: 'Error'
+      });
+    } else if (rows.length) {
+      rows.remove();
+      return res.send({
+        success: true,
+        msg: 'Amigo rechazado!'
       });
     } else {
       return res.send({
