@@ -17,8 +17,7 @@ var FriendListSchema = new mongoose.Schema({
     username: {
       type: String,
       lowercase: true,
-      index: true,
-      "enum": true
+      index: true
     }
   }]
 }, {

@@ -5,7 +5,7 @@ var FriendListSchema = new mongoose.Schema({
     username: {type: String, lowercase: true, unique: true, required: [true, "Debe rellenar todos los campos obligatorios"], match: [/^[a-zA-Z0-9]+$/, 'is invalid'], index: true},
     friends: [
         {
-            username: {type: String, lowercase: true, index:true, enum: true }
+            username: {type: String, lowercase: true, index:true }
         }
     ],
 
