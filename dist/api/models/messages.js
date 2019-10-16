@@ -5,24 +5,23 @@ var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 
 var User = mongoose.model('Usuarios');
+
+var moment = require('moment');
+
 var messageSchema = new mongoose.Schema({
   text: {
     type: String,
     required: true
   },
   user: {
-    username: {
-      type: String,
-      required: true
-    },
-    avatar: String
+    type: String,
+    required: true
   },
   to: {
-    username: {
-      type: String,
-      required: true
-    }
-  }
+    type: String,
+    required: true
+  },
+  timestamp: Number
 }, {
   timestamps: true
 });

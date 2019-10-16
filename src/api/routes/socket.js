@@ -1,44 +1,27 @@
 //var notify = require("./notifications");
 var mongoose = require('mongoose');
 var User = mongoose.model('Usuarios');
-var Message = mongoose.model('Messages');
+var Messages = mongoose.model('Messages');
 var connectedUsers = {};
 var resOnlineUsers = {};
-
+var moment = require('moment');
 module.exports = function(io) {
   io.on('connection', function(socket){
     onlineUsers[socket.handshake.query.id] = socket.id;
     resOnlineUsers[socket.id] = socket.handshake.query.id;
 
-    socket.on('update messages', function (data) {
-
+    socket.on('conectar', async function (data) {
+      var mensajes = await Messages.find({timestamp: {$gt:data.timestamp}, user: data.username, to:data.username});
+      socket.emit('actualizacion', mensajes)
     })
-    socket.on('chat', function(req){
-      console.log(req);
-      Message.find({  
-        $or: 
-        [{user:{username:req.user},createdAt: {$lt:req.date}},
-        {to:{username:req.user},createdAt: {$lt:req.date}}]
-        },function (err, res){
-          if(err){
-            socket.emit({success:false , msg:false});
-          }else{
-            console.log(res);
-            socket.emit('Pre-load', {success:true , msg:res});
-          }
-        })
-    });
-    socket.on('private', function(req){
-        console.log(req);
-        if(connectedUsers[req.destiny]){
-          socket.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg});
-        /* io.to(connectedUsers[req.destiny]).emit('private', {from:req.user, msg:req.msg}) */ 
-        }
-        var newMsg = new Message();
-        newMsg.text = req.msg;
-        newMsg.user.username = req.user;
-        newMsg.to.username = req.destiny;
-        newMsg.save();
+    socket.on('enviar', async function(data){
+      var mensaje = new Messages();
+      mensaje.text = data.text;
+      mensaje.user = data.user;
+      mmensaje.to = data.to;
+      mensaje.timestamp = data.timestamp;
+      await mensaje.save();
+      io.to(onlineUsers[data.to]).emit('mensaje',data)
     });
     socket.on('reconnect', function() {
       connectedUsers[newUser] = socket.id;
