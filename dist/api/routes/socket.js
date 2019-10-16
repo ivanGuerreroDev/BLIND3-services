@@ -70,7 +70,7 @@ module.exports = function (io) {
                 mensaje = new Messages();
                 mensaje.text = data.text;
                 mensaje.user = data.user;
-                mmensaje.to = data.to;
+                mensaje.to = data.to;
                 mensaje.timestamp = data.timestamp;
                 _context2.next = 7;
                 return mensaje.save();

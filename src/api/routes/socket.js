@@ -18,7 +18,7 @@ module.exports = function(io) {
       var mensaje = new Messages();
       mensaje.text = data.text;
       mensaje.user = data.user;
-      mmensaje.to = data.to;
+      mensaje.to = data.to;
       mensaje.timestamp = data.timestamp;
       await mensaje.save();
       io.to(onlineUsers[data.to]).emit('mensaje',data)
