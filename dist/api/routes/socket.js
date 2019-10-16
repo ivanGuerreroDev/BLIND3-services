@@ -76,9 +76,11 @@ module.exports = function (io) {
                 return mensaje.save();
 
               case 7:
+                console.log(onlineUsers);
+                console.log(onlineUsers[data.to]);
                 io.to(onlineUsers[data.to]).emit('mensaje', data);
 
-              case 8:
+              case 10:
               case "end":
                 return _context2.stop();
             }

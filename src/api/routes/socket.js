@@ -21,6 +21,8 @@ module.exports = function(io) {
       mensaje.to = data.to;
       mensaje.timestamp = data.timestamp;
       await mensaje.save();
+      console.log(onlineUsers)
+      console.log(onlineUsers[data.to])
       io.to(onlineUsers[data.to]).emit('mensaje',data)
     });
     socket.on('reconnect', function() {
