@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 
 var User = mongoose.model('Usuarios');
 var Messages = mongoose.model('Messages');
-var connectedUsers = {};
+var onlineUsers = {};
 var resOnlineUsers = {};
 
 var moment = require('moment');
