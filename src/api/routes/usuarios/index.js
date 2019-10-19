@@ -53,6 +53,15 @@ router.post('/changeAvatar', function(req, res, next){
   })
 });
 
+router.post('/updateProfile', function(req, res, next){
+  User.findOneAndUpdate({username: req.body.username}, 
+    {nombresyapellidos: req.body.nombresyapellidos},
+    { new: true }, function(err, result){
+    if(err){console.log(err);return res.status(500).json(err)}
+    if(result){return res.json({success:true})}
+  })
+});
+
 router.post('/logout', function(req, res, next){
   passport.authenticate('logoff', {
     session: false,
