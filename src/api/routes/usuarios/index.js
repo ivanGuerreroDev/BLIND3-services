@@ -9,6 +9,7 @@ var Friendlist = mongoose.model('Friendlist');
 var passport = require('passport');
 const token = require('../../middlewares/token');
 const multer = require('multer');
+var path = require('path');
 
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
