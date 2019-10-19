@@ -56,6 +56,7 @@ router.post('/changeAvatar', function(req, res, next){
 router.post('/updateProfile', function(req, res, next){
   var username = req.body.username;
   var nombresyapellidos = req.body.nombresyapellidos;
+  console.log(username, nombresyapellidos)
   User.findOneAndUpdate({username: username}, 
     {nombresyapellidos: nombresyapellidos},
     { new: true }, function(err, result){
