@@ -12,9 +12,10 @@ const multer = require('multer');
 
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
-    callback(null, './images')
+    callback(null, '/images')
   },
   filename(req, file, callback) {
+    console.log(file)
     callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
   },
 })
@@ -35,7 +36,6 @@ router.post('/login', function(req, res, next){
 });
 
 router.post('/changeAvatar', function(req, res, next){
-  console.log(req.file)
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       console.log(err)
