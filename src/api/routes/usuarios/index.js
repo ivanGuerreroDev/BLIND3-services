@@ -9,7 +9,7 @@ var Friendlist = mongoose.model('Friendlist');
 var passport = require('passport');
 const token = require('../../middlewares/token');
 const multer = require('multer');
-var path = require('path');
+var crypto = require('crypto');
 
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
@@ -211,7 +211,18 @@ router.post('/allowing', function(req, res, next){
     else {res.send({resp:key._id, valid:true})}
   })
 });
-
+router.post('/changePassword', function(req, res, next){
+  var username = req.body.username;
+  var password = req.body.password;
+  var salt = crypto.randomBytes(16).toString('hex');
+  var hash = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512').toString('hex');
+  User.findOneAndUpdate({username: username}, 
+    {salt: salt, hash: hash},
+    { new: true }, function(err, result){
+    if(err){console.log(err);return res.status(500).json(err)}
+    if(result){return res.json({success:true})}
+  })
+});
 
 
 
