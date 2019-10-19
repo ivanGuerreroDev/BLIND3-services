@@ -12,7 +12,7 @@ const multer = require('multer');
 
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
-    callback(null, '/images')
+    callback(null, path.join(__dirname+'/public/images'))
   },
   filename(req, file, callback) {
     var typeImage = file.mimetype.split('/');
