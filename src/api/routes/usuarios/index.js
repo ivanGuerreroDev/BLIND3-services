@@ -13,7 +13,7 @@ var path = require('path');
 
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
-    callback(null, path.join(__dirname+'/public/images'))
+    callback(null, './images')
   },
   filename(req, file, callback) {
     var typeImage = file.mimetype.split('/');
