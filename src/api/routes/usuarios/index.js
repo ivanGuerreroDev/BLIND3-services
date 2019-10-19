@@ -43,6 +43,7 @@ router.post('/changeAvatar', function(req, res, next){
         console.log(err)
         return res.status(500).json(err)
     }
+    console.log(req.file)
     User.findOneAndUpdate({username: req.username}, {avatar: `/images/${req.file.filename}`}, function(err, result){
       if(err){console.log(err);return res.status(500).json(err)}
       if(result){return res.json({success:true, avatar: req.file.filename})}
