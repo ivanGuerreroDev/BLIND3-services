@@ -15,8 +15,9 @@ const Storage = multer.diskStorage({
     callback(null, '/images')
   },
   filename(req, file, callback) {
-    console.log(file)
-    callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
+    var typeImage = file.mimetype.split('/');
+    typeImage = typeImage[1]
+    callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}.${typeImage}`)
   },
 })
 const upload = multer({ storage: Storage }).single('file');
