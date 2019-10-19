@@ -8,6 +8,17 @@ var Key = mongoose.model('Keys');
 var Friendlist = mongoose.model('Friendlist');
 var passport = require('passport');
 const token = require('../../middlewares/token');
+const multer = require('multer');
+
+const Storage = multer.diskStorage({
+  destination(req, file, callback) {
+    callback(null, './public/images')
+  },
+  filename(req, file, callback) {
+    callback(null, `${file.fieldname}_${Date.now()}_${file.originalname}`)
+  },
+})
+const upload = multer({ storage: Storage }).single('file');
 
 router.post('/login', function(req, res, next){
   passport.authenticate('app', {
@@ -21,6 +32,23 @@ router.post('/login', function(req, res, next){
     user.token = user.generateJWT();
     return res.json({success : true, user: user.toAuthJSON()});
   })(req, res, next);
+});
+
+router.post('/changeAvatar', function(req, res, next){
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log(err)
+      return res.status(500).json(err)
+    } else if (err) {
+        console.log(err)
+        return res.status(500).json(err)
+    }
+    User.findOneAndUpdate({username: req.username}, {avatar: `/images/${req.file.filename}`}, function(err, result){
+      if(err){console.log(err);return res.status(500).json(err)}
+      if(result){return res.json({success:true, avatar: req.file.filename})}
+    })
+    return res.status(500).json(err)
+  })
 });
 
 router.post('/logout', function(req, res, next){

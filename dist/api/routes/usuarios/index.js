@@ -24,6 +24,19 @@ var passport = require('passport');
 
 var token = require('../../middlewares/token');
 
+var multer = require('multer');
+
+var Storage = multer.diskStorage({
+  destination: function destination(req, file, callback) {
+    callback(null, './public/images');
+  },
+  filename: function filename(req, file, callback) {
+    callback(null, "".concat(file.fieldname, "_").concat(Date.now(), "_").concat(file.originalname));
+  }
+});
+var upload = multer({
+  storage: Storage
+}).single('file');
 router.post('/login', function (req, res, next) {
   passport.authenticate('app', {
     session: false,
@@ -44,6 +57,36 @@ router.post('/login', function (req, res, next) {
       user: user.toAuthJSON()
     });
   })(req, res, next);
+});
+router.post('/changeAvatar', function (req, res, next) {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log(err);
+      return res.status(500).json(err);
+    } else if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+
+    User.findOneAndUpdate({
+      username: req.username
+    }, {
+      avatar: "/images/".concat(req.file.filename)
+    }, function (err, result) {
+      if (err) {
+        console.log(err);
+        return res.status(500).json(err);
+      }
+
+      if (result) {
+        return res.json({
+          success: true,
+          avatar: req.file.filename
+        });
+      }
+    });
+    return res.status(500).json(err);
+  });
 });
 router.post('/logout', function (req, res, next) {
   passport.authenticate('logoff', {

@@ -1,4 +1,17 @@
 {
   "presets": ["@babel/preset-env"],
-  "plugins": ["@babel/plugin-transform-runtime"]
+  "plugins": [
+    "@babel/plugin-transform-runtime",
+    [
+      "file-loader",
+      {
+        "name": "[hash].[ext]",
+        "extensions": ["png", "jpg", "jpeg", "gif", "svg"],
+        "publicPath": "/public",
+        "outputPath": "/dist/public/images",
+        "context": "",
+        "limit": 0
+      }
+    ]
+  ]
 }
