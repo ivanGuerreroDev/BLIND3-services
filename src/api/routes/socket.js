@@ -12,6 +12,7 @@ module.exports = function(io) {
 
     socket.on('conectar', async function (data) {
       var mensajes = await Messages.find({timestamp: {$gt:data.timestamp}, user: data.username, to:data.username});
+      console.log(onlineUsers)
       socket.emit('actualizacion', mensajes)
     })
     socket.on('enviar', async function(data){
