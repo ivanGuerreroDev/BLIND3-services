@@ -15,7 +15,7 @@ mongoose.set('useCreateIndex', true);
 const jwt  = require('jsonwebtoken');
 var logo = require('./public/images/logo.png')
 
-  mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', { useNewUrlParser: true });
+  mongoose.connect('mongodb://blind3:rogue195@ds149146.mlab.com:49146/heroku_33n7zg9w', { useNewUrlParser: true });
   mongoose.set('debug', true);
 
 require('./api/models/usuarios');
