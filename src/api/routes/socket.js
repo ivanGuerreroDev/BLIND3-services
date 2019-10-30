@@ -9,10 +9,9 @@ module.exports = function(io) {
   io.on('connection', function(socket){
     onlineUsers[socket.handshake.query.id] = socket.id;
     resOnlineUsers[socket.id] = socket.handshake.query.id;
-
+    console.log(onlineUsers)
     socket.on('conectar', async function (data) {
       var mensajes = await Messages.find({timestamp: {$gt:data.timestamp}, user: data.username, to:data.username});
-      console.log(onlineUsers)
       socket.emit('actualizacion', mensajes)
     })
     socket.on('enviar', async function(data){
