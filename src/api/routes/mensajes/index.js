@@ -13,7 +13,7 @@ router.post('/findFriend', function(req, res, next){
     var email = req.body.email;
     User.findOne({email:email}, function(err,user){
         if(err){ return res.send({success:false, msg:'No se encontro usuario'});
-        }else{
+        }else if(user){
             Friendlist.findOne({username: username}, function(err,row){
                 if(err){return res.send({success:true, user: user});}
                 if(row != null){
@@ -26,6 +26,8 @@ router.post('/findFriend', function(req, res, next){
                     return res.send({success:true, user: user});
                 }
             })
+        }else{
+            return res.send({success:false,  msg: 'No se encontro usuario'});
         }
     });
     

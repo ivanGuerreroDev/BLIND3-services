@@ -20,6 +20,7 @@ module.exports = function (io) {
   io.on('connection', function (socket) {
     onlineUsers[socket.handshake.query.id] = socket.id;
     resOnlineUsers[socket.id] = socket.handshake.query.id;
+    console.log(onlineUsers);
     socket.on('conectar',
     /*#__PURE__*/
     function () {
@@ -36,7 +37,6 @@ module.exports = function (io) {
                   timestamp: {
                     $gt: data.timestamp
                   },
-                  user: data.username,
                   to: data.username
                 });
 

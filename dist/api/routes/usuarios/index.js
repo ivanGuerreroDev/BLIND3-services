@@ -26,12 +26,16 @@ var token = require('../../middlewares/token');
 
 var multer = require('multer');
 
+var crypto = require('crypto');
+
 var Storage = multer.diskStorage({
   destination: function destination(req, file, callback) {
-    callback(null, './public/images');
+    callback(null, './dist/public/images');
   },
   filename: function filename(req, file, callback) {
-    callback(null, "".concat(file.fieldname, "_").concat(Date.now(), "_").concat(file.originalname));
+    var typeImage = file.mimetype.split('/');
+    typeImage = typeImage[1];
+    callback(null, "".concat(file.fieldname, "_").concat(Date.now(), "_").concat(file.originalname, ".").concat(typeImage));
   }
 });
 var upload = multer({
@@ -69,9 +73,11 @@ router.post('/changeAvatar', function (req, res, next) {
     }
 
     User.findOneAndUpdate({
-      username: req.username
+      username: req.body.username
     }, {
       avatar: "/images/".concat(req.file.filename)
+    }, {
+      "new": true
     }, function (err, result) {
       if (err) {
         console.log(err);
@@ -85,7 +91,29 @@ router.post('/changeAvatar', function (req, res, next) {
         });
       }
     });
-    return res.status(500).json(err);
+  });
+});
+router.post('/updateProfile', function (req, res, next) {
+  var username = req.body.username;
+  var nombresyapellidos = req.body.nombresyapellidos;
+  console.log(username, nombresyapellidos);
+  User.findOneAndUpdate({
+    username: username
+  }, {
+    nombresyapellidos: nombresyapellidos
+  }, {
+    "new": true
+  }, function (err, result) {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+
+    if (result) {
+      return res.json({
+        success: true
+      });
+    }
   });
 });
 router.post('/logout', function (req, res, next) {
@@ -365,6 +393,31 @@ router.post('/allowing', function (req, res, next) {
       res.send({
         resp: key._id,
         valid: true
+      });
+    }
+  });
+});
+router.post('/changePassword', function (req, res, next) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var salt = crypto.randomBytes(16).toString('hex');
+  var hash = crypto.pbkdf2Sync(password, salt, 10000, 512, 'sha512').toString('hex');
+  User.findOneAndUpdate({
+    username: username
+  }, {
+    salt: salt,
+    hash: hash
+  }, {
+    "new": true
+  }, function (err, result) {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+
+    if (result) {
+      return res.json({
+        success: true
       });
     }
   });

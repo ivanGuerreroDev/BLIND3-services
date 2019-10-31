@@ -34,7 +34,7 @@ mongoose.set('useCreateIndex', true);
 var jwt = require('jsonwebtoken');
 
 var logo = "/public/2c36d268c9e20c654e7274ddda4a4b55.png";
-mongoose.connect('mongodb://blind3:businetBlind3@ds149146.mlab.com:49146/heroku_33n7zg9w', {
+mongoose.connect('mongodb://blind3:rogue195@ds149146.mlab.com:49146/heroku_33n7zg9w', {
   useNewUrlParser: true
 });
 mongoose.set('debug', true);

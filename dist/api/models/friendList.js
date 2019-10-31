@@ -18,7 +18,9 @@ var FriendListSchema = new mongoose.Schema({
       type: String,
       lowercase: true,
       index: true
-    }
+    },
+    nombresyapellidos: String,
+    avatar: String
   }]
 }, {
   timestamps: true

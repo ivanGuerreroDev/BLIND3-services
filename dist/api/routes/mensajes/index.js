@@ -28,7 +28,7 @@ router.post('/findFriend', function (req, res, next) {
         success: false,
         msg: 'No se encontro usuario'
       });
-    } else {
+    } else if (user) {
       Friendlist.findOne({
         username: username
       }, function (err, row) {
@@ -59,6 +59,11 @@ router.post('/findFriend', function (req, res, next) {
             user: user
           });
         }
+      });
+    } else {
+      return res.send({
+        success: false,
+        msg: 'No se encontro usuario'
       });
     }
   });
@@ -98,7 +103,7 @@ function (req, res, next) {
     var _ref = (0, _asyncToGenerator2["default"])(
     /*#__PURE__*/
     _regenerator["default"].mark(function _callee(err, rows) {
-      var user1, user2;
+      var data1, user1, data2, user2;
       return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -119,19 +124,25 @@ function (req, res, next) {
                 break;
               }
 
-              console.log(req.body.username);
-              console.log(req.body.friend);
-              _context.next = 9;
+              data1 = User.findOne({
+                username: req.body.username
+              });
+              _context.next = 8;
               return Friendlist.findOne({
                 username: req.body.username
               });
 
-            case 9:
+            case 8:
               user1 = _context.sent;
               user1.friends.push({
-                username: req.body.friend
+                username: data1.username,
+                avatar: data1.avatar,
+                nombresyapellidos: data1.nombresyapellidos
               });
               user1.save();
+              data2 = User.findOne({
+                username: req.body.friend
+              });
               _context.next = 14;
               return Friendlist.findOne({
                 username: req.body.friend
@@ -140,7 +151,9 @@ function (req, res, next) {
             case 14:
               user2 = _context.sent;
               user2.friends.push({
-                username: req.body.username
+                username: data2.username,
+                avatar: data2.avatar,
+                nombresyapellidos: data2.nombresyapellidos
               });
               user2.save();
               rows.remove();
