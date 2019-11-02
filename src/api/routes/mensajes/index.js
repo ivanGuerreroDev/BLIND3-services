@@ -45,7 +45,7 @@ router.post('/friendRequests', function(req, res, next){
 router.post('/addFriend', /*token,*/ function(req, res, next){
     FriendRequest.findOne({username:req.body.friend, request: req.body.username}, async function(err,rows){
         if(err){
-            return res.send({success:false, msg:'Error'});
+            return res.send({success:false, msg:'Error 1'});
         }else if(rows){
             var data1 = User.findOne({username: req.body.username});
             var user1 = await Friendlist.findOne({username: req.body.username})
@@ -59,7 +59,7 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
             rows.remove();
             return  res.send({success:true, msg:'Amigo agregado!'});
         }else{
-            return res.send({success:false, msg:'Error'});
+            return res.send({success:false, msg:'Error 2'});
         }
     }); 
 });
