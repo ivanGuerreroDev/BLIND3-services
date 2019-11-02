@@ -46,20 +46,22 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
     FriendRequest.findOne({username:req.body.friend, request: req.body.username}, async function(err,rows){
         if(err){
             return res.send({success:false, msg:'Error 1'});
-        }else if(rows){
-            var data1 = User.findOne({username: req.body.username});
-            var user1 = await Friendlist.findOne({username: req.body.username})
-            user1.friends.push({username: data1.username, avatar: data1.avatar, nombresyapellidos: data1.nombresyapellidos});
-            user1.save();
+        }else{ 
+            if(rows){
+                var data1 = User.findOne({username: req.body.username});
+                var user1 = await Friendlist.findOne({username: req.body.username})
+                user1.friends.push({username: data1.username, avatar: data1.avatar, nombresyapellidos: data1.nombresyapellidos});
+                user1.save();
 
-            var data2 = User.findOne({username: req.body.friend});
-            var user2 = await Friendlist.findOne({username: req.body.friend})
-            user2.friends.push({username: data2.username, avatar: data2.avatar, nombresyapellidos: data2.nombresyapellidos});
-            user2.save();
-            rows.remove();
-            return  res.send({success:true, msg:'Amigo agregado!'});
-        }else{
-            return res.send({success:false, msg:'Error 2'});
+                var data2 = User.findOne({username: req.body.friend});
+                var user2 = await Friendlist.findOne({username: req.body.friend})
+                user2.friends.push({username: data2.username, avatar: data2.avatar, nombresyapellidos: data2.nombresyapellidos});
+                user2.save();
+                rows.remove();
+                return  res.send({success:true, msg:'Amigo agregado!'});
+            }else{
+                return res.send({success:false, msg:'Error 2'});
+            }
         }
     }); 
 });
