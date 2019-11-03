@@ -49,7 +49,8 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
         }else{ 
             if(rows){
                 var data1 = User.findOne({username: req.body.username});
-                var user1 = await Friendlist.findOne({username: req.body.username})
+                var user1 = await Friendlist.findOne({username: req.body.username});
+                console.log(data1);
                 user1.friends.push({username: data1.username, avatar: data1.avatar, nombresyapellidos: data1.nombresyapellidos});
                 user1.save();
 
