@@ -122,22 +122,29 @@ router.post('/friendList', /*token,*/ function(req, res, next){
     });
 });
 
-router.post('/removeFriend', /*token,*/ function(req, res, next){
+router.post('/removeFriend', /*token,*/ async function(req, res, next){
 
     User.findOne({username:req.body.friend}, function(err,user){
         if(err){
             return res.send({success:false, msg:'No se encontró usuario'});
-        }else{
+        }else if(user){
             Friendlist.findOne({username:user.username}, function(err2,friendlist){
                 if(err2){
-                    return res.send({success:false, msg:'Solicitud invalida'});
-                }else{
-                    tempFriendlist = arrayRemove(friendlist.friends, user.username);
-                    friendlist.friends = tempFriendlist;
+                    return res.send({success:false, msg:'Error!'});
+                }else if(friendlist){
+                    friendlist.friends[req.body.username] = undefined;
                     friendlist.save();
-                    return res.send({success:true, msg:'Eliminado!'});
+                    Friendlist.findOne({username:req.body.username}, function(err3,friendlist2){
+                        if(err3){
+                            return res.send({success:false, msg:'Error!'});
+                        }else if(friendlist2){
+                            friendlist2.friends[user.username] = undefined;
+                            friendlist2.save();
+                            return res.send({success:true, msg:'Eliminado!'});
+                        }
+                    })
                 }
-            });    
+            });
         }
     });
 });
