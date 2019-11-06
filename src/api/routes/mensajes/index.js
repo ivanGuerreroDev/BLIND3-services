@@ -54,7 +54,7 @@ router.post('/addFriend', /*token,*/ function(req, res, next){
                 user1.friends.push({username: data1.username, avatar: data1.avatar, nombresyapellidos: data1.nombresyapellidos});
                 user1.save();
                 var data2 = User.findOne({username: req.body.friend}).exec();
-                var user2 = await Friendlist.findOne({username: req.body.friend})
+                var user2 = await Friendlist.findOne({username: req.body.friend}).exec()
                 user2.friends.push({username: data2.username, avatar: data2.avatar, nombresyapellidos: data2.nombresyapellidos});
                 user2.save();
                 rows.remove();
