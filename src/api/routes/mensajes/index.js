@@ -69,7 +69,7 @@ router.post('/denyFriend', /*token,*/ function(req, res, next){
     FriendRequest.findOne({username:req.body.friend, request: req.body.username}, function(err,rows){
         if(err){
             return res.send({success:false, msg:'Error'});
-        }else if(rows.length){
+        }else if(rows){
             rows.remove();
             return  res.send({success:true, msg:'Amigo rechazado!'});
         }else{
