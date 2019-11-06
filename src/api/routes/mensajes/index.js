@@ -132,13 +132,15 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
                 if(err2){
                     return res.send({success:false, msg:'Error!'});
                 }else if(friendlist){
-                    friendlist.friends[req.body.username] = undefined;
+                    var iDelete = findIndexByUsername(friendlist.friends, req.body.username);
+                    friendlist.friends[iDelete] = undefined;
                     friendlist.save();
                     Friendlist.findOne({username:req.body.username}, function(err3,friendlist2){
                         if(err3){
                             return res.send({success:false, msg:'Error!'});
                         }else if(friendlist2){
-                            friendlist2.friends[user.username] = undefined;
+                            var iDelete = findIndexByUsername(friendlist2.friends, user.username);
+                            friendlist2.friends[iDelete] = undefined;
                             friendlist2.save();
                             return res.send({success:true, msg:'Eliminado!'});
                         }
@@ -149,11 +151,12 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
     });
 });
 
-function arrayRemove(arr, value) {
-
-    return arr.filter(function(ele){
-        return ele != value;
-    });
+function findIndexByUsername(arr, value) {
+    for(var key in arr)
+    {
+        if(arr[key].username===value)
+            return key
+    }
  
  }
 
