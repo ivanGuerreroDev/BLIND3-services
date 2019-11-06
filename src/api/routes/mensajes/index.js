@@ -133,16 +133,14 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
                     return res.send({success:false, msg:'Error!'});
                 }else if(friendlist){
                     var iDelete = findIndexByUsername(friendlist.friends, req.body.username);
-                    friendlist.friends[iDelete] = undefined;
-                    console.log(iDelete)
+                    delete friendlist.friends[iDelete];
                     friendlist.save();
                     Friendlist.findOne({username:req.body.username}, function(err3,friendlist2){
                         if(err3){
                             return res.send({success:false, msg:'Error!'});
                         }else if(friendlist2){
                             var iDelete = findIndexByUsername(friendlist2.friends, user.username);
-                            console.log(iDelete)
-                            friendlist2.friends[iDelete] = undefined;
+                            delete friendlist2.friends[iDelete];
                             friendlist2.save();
                             return res.send({success:true, msg:'Eliminado!'});
                         }
