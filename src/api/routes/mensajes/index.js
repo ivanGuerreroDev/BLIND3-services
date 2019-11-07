@@ -132,9 +132,8 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
                 if(err2){
                     return res.send({success:false, msg:'Error!'});
                 }else if(friendlist){
-                    var iDelete = findIndexByUsername(friendlist.friends, req.body.username);
-                    delete friendlist.friends[iDelete];
-                    console.log(friendlist)
+                    var friendsNew = deleteFriend(friendlist.friends, req.body.username);
+                    friendlist.friends = friendsNew;
                     friendlist.save(err=>{
                         if(err){ res.send({success:false, msg:'Error!'})}
                         else{
@@ -142,8 +141,8 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
                                 if(err3){
                                     return res.send({success:false, msg:'Error!'});
                                 }else if(friendlist2){
-                                    var iDelete = findIndexByUsername(friendlist2.friends, user.username);
-                                    delete friendlist2.friends[iDelete];
+                                    var friendsNew = deleteFriend(friendlist2.friends, user.username);
+                                    friendlist2.friends = friendsNew;
                                     console.log(friendlist2)
                                     friendlist2.save(err=>{
                                         if(err){ res.send({success:false, msg:'Error!'})}
@@ -160,13 +159,14 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
     });
 });
 
-function findIndexByUsername(arr, value) {
+function deleteFriend(arr, value) {
+    result = []
     for(var key in arr)
     {
-        if(arr[key].username===value)
-            return key
+        if(arr[key].username!=value)
+            result.push(arr[key])
     }
- 
+    return result
  }
 
 module.exports = router;
