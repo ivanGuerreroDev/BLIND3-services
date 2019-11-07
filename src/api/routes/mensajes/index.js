@@ -162,12 +162,11 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
 
 function deleteFriend(arr, value) {
     var result = []
-    for(var key in arr)
-    {
-        if(arr[key].username!=value){
-            result.push(arr[key])
+    arr.forEach((e,i)=>{
+        if(e.username!=value){
+            result.push(e)
         }
-    }
+    })
     return result
  }
 
