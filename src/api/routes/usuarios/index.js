@@ -10,7 +10,7 @@ var passport = require('passport');
 const token = require('../../middlewares/token');
 const multer = require('multer');
 var crypto = require('crypto');
-
+var moment = require('moment');
 const Storage = multer.diskStorage({
   destination(req, file, callback) {
     callback(null, './dist/public/images')
@@ -116,7 +116,7 @@ router.post('/recovery', function(req,res,next){
   var autorizacion = req.body.autorizacion;
   var password = req.body.password;
   console.log(email,password,autorizacion)
-  if(!email && !password && !autorizacion) res.send({message:'Debe rellenar todos los campos',valid:false});
+  if(!email && !password && !autorizacion) return res.send({message:'Debe rellenar todos los campos',valid:false});
   Key.findById(autorizacion,function(err,key){
     if(key){
       User.findOne({email: email},function(err,user){
@@ -147,14 +147,14 @@ router.post('/recovery', function(req,res,next){
               console.log('Message %s sent: %s', info.messageId, info.response);   
             });          
             key.deleteOne();
-            res.send({message:'Your password has changed',valid:true});      
+            return res.send({message:'Your password has changed',valid:true});      
           })
         }else{
-          res.send({message:'Error en email',valid:false});
+          return res.send({message:'Error en email',valid:false});
         }
       })
     }else{
-      res.send({message:'Error en codigo de autorizacion',valid:false});
+      return res.send({message:'Error en codigo de autorizacion',valid:false});
     }
   })
 });
