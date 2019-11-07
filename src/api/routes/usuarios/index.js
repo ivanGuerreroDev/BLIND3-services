@@ -159,42 +159,39 @@ router.post('/recovery', function(req,res,next){
   })
 });
 
-router.post('/permission', async function(req, res, next){
+router.post('/permission', async function(req, res){
   var email = req.body.email;
-  if(!email) {return res.send({message:'correo no recibido',valid:false});}
+  if(!email){return res.send({message:'correo no recibido',valid:false});}
   else if(!req.body.type){ console.log('no 2'); return res.send({message:'Error en el formulario',valid:false})
-  }
-  var usuario = await User.findOne({email: email}).exec();
-  if(req.body.type=='Creation' && usuario){
-    var msg = 'Email ya registrado';
-    var valid = false;
-    return res.send({message:msg, valid:valid});
   }else{
-    Key.findOne({email: email},function (err, user) {
-      console.log(err, user)
-      if (err) return res.send({message:err, valid:false})
-      if(user){
+    var usuario = await User.findOne({email: email}).exec();
+    if(req.body.type=='Creation' && usuario){
+      var msg = 'Email ya registrado';
+      var valid = false;
+      return res.send({message:msg, valid:valid});
+    }else{
+      var key = await Key.findOne({email: email, type:'Recovery'})
+      if(key){
         var now = new Date();
-        if( !(now > user.exp) ){
+        if( !(moment(now).valueOf() > moment(user.exp).valueOf()) ){
           var msg = 'Codigo Reenviado!';
           sendCode(email, user.tokenReg);
           return res.send({message:msg,valid:true});
         }
-      }else{
-        var code = makeid(5);
-        var key = new Key();
-        key.email = email;
-        key.tokenReg = code;
-        key.generateExpDate();
-        key.type = req.body.type;
-        sendCode(email, code);
-        key.save(function(err){
-          if (err) console.log(err);
-          var msg = 'Codigo enviado!';
-          return res.send({message:msg,valid:true});
-        })
       }
-    })
+      var code = makeid(5);
+      var key = new Key();
+      key.email = email;
+      key.tokenReg = code;
+      key.generateExpDate();
+      key.type = req.body.type;
+      sendCode(email, code);
+      key.save(function(err){
+        if (err) console.log(err);
+        var msg = 'Codigo enviado!';
+        return res.send({message:msg,valid:true});
+      })
+    }
   }
   
 });
