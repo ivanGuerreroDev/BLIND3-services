@@ -164,17 +164,14 @@ router.post('/permission', async function(req, res, next){
   if(!email) {return res.send({message:'correo no recibido',valid:false});}
   else if(!req.body.type){ console.log('no 2'); return res.send({message:'Error en el formulario',valid:false})
   }
-  var usuario = await User.findOne({email: email},function(err,user){
-    if (err) {
-      return res.send({message:err, valid:false})
-    }
-  });
+  var usuario = await User.findOne({email: email}).exec();
   if(req.body.type=='Creation' && usuario){
     var msg = 'Email ya registrado';
     var valid = false;
     return res.send({message:msg, valid:valid});
   }else{
     Key.findOne({email: email},function (err, user) {
+      console.log(err, user)
       if (err) return res.send({message:err, valid:false})
       if(user){
         var now = new Date();
