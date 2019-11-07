@@ -246,9 +246,9 @@ function sendCode(email, code){
     }
   });
   let mailOptions = {
-    from: '"Businet" <ivan.guerrero@businet-web.com>', // sender address
+    from: '"BLIND3" <ivan.guerrero@businet-web.com>', // sender address
     to: email, // list of receivers
-    subject: "Verification Code from Businet", // Subject line
+    subject: "Verification Code from BLIND3", // Subject line
     text: "Verification Code", // plain text body
     html: '<b>The Verification Code is: '+code+'</b>' // html body
   };
