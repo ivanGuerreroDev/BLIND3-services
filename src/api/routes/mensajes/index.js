@@ -134,7 +134,7 @@ router.post('/removeFriend', /*token,*/ async function(req, res, next){
                 }else if(friendlist){
                     var friendsNew = deleteFriend(friendlist.friends, req.body.username);
                     friendlist.friends = friendsNew;
-                    console.log(friendlist2)
+                    console.log(friendlist)
                     friendlist.save(err=>{
                         if(err){ res.send({success:false, msg:'Error!'})}
                         else{
