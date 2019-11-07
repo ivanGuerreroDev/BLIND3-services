@@ -15,9 +15,8 @@ var keySchema = new mongoose.Schema({
 keySchema.plugin(uniqueValidator, {error: 'is already taken.'});
 
 keySchema.methods.generateExpDate = function() {
-  var today = new Date();
-  var tomorrow = new Date(today)+1;
-  this.exp = moment(tomorrow).valueOf();
+  var tomorrow =  moment(new Date()).add(1,'days');
+  this.exp = tomorrow;
 };
 
 mongoose.model('Keys', keySchema);
