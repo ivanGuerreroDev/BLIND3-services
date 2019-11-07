@@ -164,8 +164,9 @@ function deleteFriend(arr, value) {
     var result = []
     for(var key in arr)
     {
-        if(arr[key].username!=value)
+        if(arr[key].username!=value){
             result.push(arr[key])
+        }
     }
     return result
  }
