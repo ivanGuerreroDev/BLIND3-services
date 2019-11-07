@@ -28,6 +28,8 @@ var multer = require('multer');
 
 var crypto = require('crypto');
 
+var moment = require('moment');
+
 var Storage = multer.diskStorage({
   destination: function destination(req, file, callback) {
     callback(null, './dist/public/images');
@@ -188,7 +190,8 @@ router.post('/recovery', function (req, res, next) {
   var email = req.body.email;
   var autorizacion = req.body.autorizacion;
   var password = req.body.password;
-  if (!email && !password && !autorizacion) res.send({
+  console.log(email, password, autorizacion);
+  if (!email && !password && !autorizacion) return res.send({
     message: 'Debe rellenar todos los campos',
     valid: false
   });
@@ -230,20 +233,20 @@ router.post('/recovery', function (req, res, next) {
               console.log('Message %s sent: %s', info.messageId, info.response);
             });
             key.deleteOne();
-            res.send({
+            return res.send({
               message: 'Your password has changed',
               valid: true
             });
           });
         } else {
-          res.send({
+          return res.send({
             message: 'Error en email',
             valid: false
           });
         }
       });
     } else {
-      res.send({
+      return res.send({
         message: 'Error en codigo de autorizacion',
         valid: false
       });
@@ -255,8 +258,8 @@ router.post('/permission',
 function () {
   var _ref = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  _regenerator["default"].mark(function _callee(req, res, next) {
-    var email, usuario, msg, valid;
+  _regenerator["default"].mark(function _callee(req, res) {
+    var email, usuario, msg, valid, key, now, code;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -275,7 +278,7 @@ function () {
 
           case 5:
             if (req.body.type) {
-              _context.next = 8;
+              _context.next = 10;
               break;
             }
 
@@ -285,24 +288,17 @@ function () {
               valid: false
             }));
 
-          case 8:
-            _context.next = 10;
+          case 10:
+            _context.next = 12;
             return User.findOne({
               email: email
-            }, function (err, user) {
-              if (err) {
-                return res.send({
-                  message: err,
-                  valid: false
-                });
-              }
-            });
+            }).exec();
 
-          case 10:
+          case 12:
             usuario = _context.sent;
 
             if (!(req.body.type == 'Creation' && usuario)) {
-              _context.next = 17;
+              _context.next = 19;
               break;
             }
 
@@ -310,49 +306,56 @@ function () {
             valid = false;
             return _context.abrupt("return", res.send({
               message: msg,
-              status: valid
+              valid: valid
             }));
 
-          case 17:
-            Key.findOne({
-              email: email
-            }, function (err, user) {
-              if (err) return res.send({
-                message: err,
-                valid: false
-              });
+          case 19:
+            _context.next = 21;
+            return Key.findOne({
+              email: email,
+              type: 'Recovery'
+            });
 
-              if (user) {
-                var now = new Date();
+          case 21:
+            key = _context.sent;
 
-                if (!(now > user.exp)) {
-                  var msg = 'Codigo Reenviado!';
-                  sendCode(email, user.tokenReg);
-                  return res.send({
-                    message: msg,
-                    valid: false
-                  });
-                }
-              }
+            if (!key) {
+              _context.next = 28;
+              break;
+            }
 
-              var code = makeid(5);
-              var key = new Key();
-              key.email = email;
-              key.tokenReg = code;
-              key.generateExpDate();
-              key.type = req.body.type;
-              sendCode(email, code);
-              key.save(function (err) {
-                if (err) console.log(err);
-                var msg = 'Codigo enviado!';
-                return res.send({
-                  message: msg,
-                  valid: true
-                });
+            now = new Date();
+
+            if (moment(now).valueOf() > moment(user.exp).valueOf()) {
+              _context.next = 28;
+              break;
+            }
+
+            msg = 'Codigo Reenviado!';
+            sendCode(email, user.tokenReg);
+            return _context.abrupt("return", res.send({
+              message: msg,
+              valid: true
+            }));
+
+          case 28:
+            code = makeid(5);
+            key = new Key();
+            key.email = email;
+            key.tokenReg = code;
+            key.generateExpDate();
+            key.type = req.body.type;
+            sendCode(email, code);
+            key.save(function (err) {
+              if (err) console.log(err);
+              var msg = 'Codigo enviado!';
+              return res.send({
+                message: msg,
+                valid: true
               });
             });
 
-          case 18:
+          case 36:
           case "end":
             return _context.stop();
         }
@@ -360,7 +363,7 @@ function () {
     }, _callee);
   }));
 
-  return function (_x, _x2, _x3) {
+  return function (_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }());
@@ -448,11 +451,11 @@ function sendCode(email, code) {
     }
   });
   var mailOptions = {
-    from: '"Businet" <ivan.guerrero@businet-web.com>',
+    from: '"BLIND3" <ivan.guerrero@businet-web.com>',
     // sender address
     to: email,
     // list of receivers
-    subject: "Verification Code from Businet",
+    subject: "Verification Code from BLIND3",
     // Subject line
     text: "Verification Code",
     // plain text body

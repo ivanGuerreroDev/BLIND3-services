@@ -173,9 +173,9 @@ router.post('/permission', async function(req, res){
       var key = await Key.findOne({email: email, type:'Recovery'})
       if(key){
         var now = new Date();
-        if( !(moment(now).valueOf() > moment(user.exp).valueOf()) ){
+        if( !(moment(now).valueOf() > moment(key.exp).valueOf()) ){
           var msg = 'Codigo Reenviado!';
-          sendCode(email, user.tokenReg);
+          sendCode(email, key.tokenReg);
           return res.send({message:msg,valid:true});
         }
       }
