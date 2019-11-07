@@ -115,6 +115,7 @@ router.post('/recovery', function(req,res,next){
   var email = req.body.email;
   var autorizacion = req.body.autorizacion;
   var password = req.body.password;
+  console.log(email,password,autorizacion)
   if(!email && !password && !autorizacion) res.send({message:'Debe rellenar todos los campos',valid:false});
   Key.findById(autorizacion,function(err,key){
     if(key){
@@ -171,7 +172,7 @@ router.post('/permission', async function(req, res, next){
   if(req.body.type=='Creation' && usuario){
     var msg = 'Email ya registrado';
     var valid = false;
-    return res.send({message:msg,status:valid});
+    return res.send({message:msg, valid:valid});
   }else{
     Key.findOne({email: email},function (err, user) {
       if (err) return res.send({message:err, valid:false})
@@ -180,21 +181,22 @@ router.post('/permission', async function(req, res, next){
         if( !(now > user.exp) ){
           var msg = 'Codigo Reenviado!';
           sendCode(email, user.tokenReg);
-          return res.send({message:msg,valid:false});
+          return res.send({message:msg,valid:true});
         }
+      }else{
+        var code = makeid(5);
+        var key = new Key();
+        key.email = email;
+        key.tokenReg = code;
+        key.generateExpDate();
+        key.type = req.body.type;
+        sendCode(email, code);
+        key.save(function(err){
+          if (err) console.log(err);
+          var msg = 'Codigo enviado!';
+          return res.send({message:msg,valid:true});
+        })
       }
-      var code = makeid(5);
-      var key = new Key();
-      key.email = email;
-      key.tokenReg = code;
-      key.generateExpDate();
-      key.type = req.body.type;
-      sendCode(email, code);
-      key.save(function(err){
-        if (err) console.log(err);
-        var msg = 'Codigo enviado!';
-        return res.send({message:msg,valid:true});
-      })
     })
   }
   
