@@ -205,7 +205,7 @@ router.post('/allowing', function(req, res, next){
   var now = new Date();
   now = moment(now).valueOf();
   Key.findOne({email: email, tokenReg: code, exp: {$gt: now}},function(err,key){
-    if(err){ res.send({message:'error', valid:false})}
+    if(err){ res.send({message:'error', valid:false})} 
     else if(!key) {res.send({message:'Codigo no encontrado o expirado', valid:false})}
     else {res.send({resp:key._id, valid:true})}
   })

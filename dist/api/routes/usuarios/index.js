@@ -320,25 +320,28 @@ function () {
             key = _context.sent;
 
             if (!key) {
-              _context.next = 28;
+              _context.next = 31;
               break;
             }
 
             now = new Date();
 
-            if (moment(now).valueOf() > moment(user.exp).valueOf()) {
-              _context.next = 28;
+            if (moment(now).valueOf() > key.exp) {
+              _context.next = 30;
               break;
             }
 
             msg = 'Codigo Reenviado!';
-            sendCode(email, user.tokenReg);
+            sendCode(email, key.tokenReg);
             return _context.abrupt("return", res.send({
               message: msg,
               valid: true
             }));
 
-          case 28:
+          case 30:
+            key.deleteOne();
+
+          case 31:
             code = makeid(5);
             key = new Key();
             key.email = email;
@@ -355,7 +358,7 @@ function () {
               });
             });
 
-          case 36:
+          case 39:
           case "end":
             return _context.stop();
         }
@@ -375,11 +378,12 @@ router.post('/allowing', function (req, res, next) {
   var code = req.body.code;
   var email = req.body.email;
   var now = new Date();
+  now = moment(now).valueOf();
   Key.findOne({
     email: email,
     tokenReg: code,
     exp: {
-      $lt: now
+      $gt: now
     }
   }, function (err, key) {
     if (err) {

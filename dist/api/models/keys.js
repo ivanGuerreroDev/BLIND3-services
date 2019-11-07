@@ -10,6 +10,8 @@ var jwt = require('jsonwebtoken');
 
 var secret = require('../../config').secret;
 
+var moment = require('moment');
+
 var keySchema = new mongoose.Schema({
   email: {
     type: String,
@@ -17,7 +19,7 @@ var keySchema = new mongoose.Schema({
     required: [true, "Debe rellenar todos los campos obligatorios"],
     match: [/\S+@\S+\.\S+/, 'is invalid']
   },
-  exp: Date,
+  exp: Number,
   type: {
     type: String,
     "enum": ['Creation', 'Recovery'],
@@ -37,7 +39,8 @@ keySchema.plugin(uniqueValidator, {
 
 keySchema.methods.generateExpDate = function () {
   var today = new Date();
-  this.exp = new Date(today) + 1;
+  var tomorrow = new Date(today) + 1;
+  this.exp = moment(tomorrow).valueOf();
 };
 
 mongoose.model('Keys', keySchema);
