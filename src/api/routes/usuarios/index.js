@@ -173,10 +173,12 @@ router.post('/permission', async function(req, res){
       var key = await Key.findOne({email: email, type:'Recovery'})
       if(key){
         var now = new Date();
-        if( !(moment(now).valueOf() > moment(key.exp).valueOf()) ){
+        if( !(moment(now).valueOf() > key.exp) ){
           var msg = 'Codigo Reenviado!';
           sendCode(email, key.tokenReg);
           return res.send({message:msg,valid:true});
+        }else{
+          key.deleteOne();
         }
       }
       var code = makeid(5);
